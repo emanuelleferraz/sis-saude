@@ -1,6 +1,6 @@
 package br.edu.ufop.tcc.sis_api.model.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -20,38 +20,37 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "paciente")
+@Table(name = "visita")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PacienteEntity {
+public class VisitaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_paciente")
+    @Column(name = "id_visita")
     private Integer id;
 
-    @Column(nullable = false, length = 150)
-    private String nome;
+    @Column(name = "data_visita", nullable = false)
+    private LocalDateTime dataVisita;
 
-    @Column(unique = true)
-    private String cpf;
-
-    @Column(name = "data_nascimento")
-    private LocalDate dataNascimento;
-
-    private String telefone;
+    @Column(columnDefinition = "TEXT")
+    private String observacoes;
 
     @ManyToOne
-    @JoinColumn(name = "id_endereco", nullable = false)
-    private EnderecoEntity endereco;
+    @JoinColumn(name = "id_paciente", nullable = false)
+    private PacienteEntity paciente;
+
+    @ManyToOne
+    @JoinColumn(name = "id_agente", nullable = false)
+    private AgenteSaudeEntity agente;
 
     @ManyToMany
     @JoinTable(
-        name = "paciente_doenca",
-        joinColumns = @JoinColumn(name = "id_paciente"),
+        name = "visita_doenca",
+        joinColumns = @JoinColumn(name = "id_visita"),
         inverseJoinColumns = @JoinColumn(name = "id_doenca")
     )
     private List<DoencaEntity> doencas;
