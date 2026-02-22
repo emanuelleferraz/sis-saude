@@ -76,13 +76,21 @@ public class PacienteService {
     }
 
     private PacienteResponseDTO converterParaResponse(PacienteEntity paciente) {
+        
+        EnderecoEntity end = paciente.getEndereco();
+
+        String enderecoFormatado = end.getRua() + ", "
+                + end.getNumero() + " - "
+                + end.getBairro().getNome();
+        
         return PacienteResponseDTO.builder()
                 .id(paciente.getId())
                 .nome(paciente.getNome())
                 .cpf(paciente.getCpf())
                 .telefone(paciente.getTelefone())
-                .dataNascimento(paciente.getDataNascimento().toString())
                 .cidade(paciente.getEndereco().getCidade())
+                .dataNascimento(paciente.getDataNascimento().toString())
+                .enderecoDescricao(enderecoFormatado)
                 .bairro(paciente.getEndereco().getBairro().getNome())
                 .build();
     }

@@ -14,4 +14,5 @@ public class PacienteResponseDTO {
     private String dataNascimento;
     private String cidade;
     private String bairro;
+    private String enderecoDescricao;
 }

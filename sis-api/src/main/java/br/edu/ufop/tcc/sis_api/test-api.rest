@@ -1,0 +1,117 @@
+### Criar Bairro
+POST http://localhost:8080/bairros
+Content-Type: application/json
+
+{
+  "nome": "Laranjeiras"
+}
+
+###
+
+### Listar Bairros
+GET http://localhost:8080/bairros
+
+###
+
+### Buscar Bairro por ID
+GET http://localhost:8080/bairros/1
+
+###
+
+### Atualizar Bairro
+PUT http://localhost:8080/bairros/2
+Content-Type: application/json
+
+{
+  "nome": "Manoel Santana"
+}
+
+###
+
+### Deletar Bairro
+DELETE http://localhost:8080/bairros/3
+############################################################
+
+### Criar Endereco
+POST http://localhost:8080/enderecos
+Content-Type: application/json
+
+{
+  "rua": "Rua Treze de Janeiro",
+  "numero": "705",
+  "complemento": "Casa",
+  "cep": "39935-000",
+  "cidade": "Santo Antônio do Jacinto",
+  "idBairro": 1
+}
+
+###
+
+### Listar Enderecos
+GET http://localhost:8080/enderecos
+
+###
+
+### Buscar Endereco
+GET http://localhost:8080/enderecos/1
+
+###
+
+### Atualizar Endereco
+PUT http://localhost:8080/enderecos/1
+Content-Type: application/json
+
+{
+  "rua": "Rua Treze de Janeiro",
+  "numero": "702",
+  "complemento": "Casa",
+  "cep": "39935-000",
+  "cidade": "Santo Antônio do Jacinto",
+  "idBairro": 1
+}
+
+###
+
+### Deletar Endereco
+DELETE http://localhost:8080/enderecos/2
+#############################################################
+### Criar Paciente
+POST http://localhost:8080/pacientes
+Content-Type: application/json
+
+{
+  "nome": "Gleiziane Ferraz Aguiar Lima",
+  "cpf": "12345678900",
+  "dataNascimento": "1982-04-15",
+  "telefone": "(33) 98858-2438",
+  "idEndereco": 1
+}
+
+###
+
+### Listar Pacientes
+GET http://localhost:8080/pacientes
+
+###
+
+### Buscar Paciente
+GET http://localhost:8080/pacientes/1
+
+###
+
+### Atualizar Paciente
+PUT http://localhost:8080/pacientes/1
+Content-Type: application/json
+
+{
+  "nome": "Gleiziane Ferraz Aguiar Lima",
+  "cpf": "12345678901",
+  "dataNascimento": "1982-04-15",
+  "telefone": "(33) 98858-2439",
+  "idEndereco": 1
+}
+
+###
+
+### Deletar Paciente
+DELETE http://localhost:8080/pacientes/1
