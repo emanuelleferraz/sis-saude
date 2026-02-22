@@ -11,6 +11,7 @@ import br.edu.ufop.tcc.sis_api.model.entity.EnderecoEntity;
 import br.edu.ufop.tcc.sis_api.model.entity.PacienteEntity;
 import br.edu.ufop.tcc.sis_api.repository.EnderecoRepository;
 import br.edu.ufop.tcc.sis_api.repository.PacienteRepository;
+import br.edu.ufop.tcc.sis_api.service.strategy.cpf.CpfValidatorStrategy;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,8 +20,11 @@ public class PacienteService {
 
     private final PacienteRepository repository;
     private final EnderecoRepository enderecoRepository;
+    private final CpfValidatorStrategy cpfValidator;
 
     public PacienteResponseDTO salvar(PacienteRequestDTO dto) {
+
+        cpfValidator.validar(dto.getCpf());
 
         EnderecoEntity endereco = enderecoRepository.findById(dto.getIdEndereco())
                 .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
@@ -53,6 +57,8 @@ public class PacienteService {
     }
 
     public PacienteResponseDTO atualizar(Integer id, PacienteRequestDTO dto) {
+
+        cpfValidator.validar(dto.getCpf());
 
         PacienteEntity paciente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
