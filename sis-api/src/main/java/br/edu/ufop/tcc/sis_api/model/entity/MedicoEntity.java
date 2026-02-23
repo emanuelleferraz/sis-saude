@@ -37,8 +37,6 @@ public class MedicoEntity {
     @Column(nullable = false, length = 100)
     private String especialidade;
 
-    private String telefone;
-
     @ManyToOne
     @JoinColumn(name = "id_unidade", nullable = false)
     private UnidadePsfEntity unidade;
