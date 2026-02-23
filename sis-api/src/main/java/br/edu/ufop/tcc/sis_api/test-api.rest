@@ -343,3 +343,79 @@ Content-Type: application/json
 DELETE http://localhost:8080/usuarios/4
 
 ############################################################################################################
+
+### Criar Agente
+
+POST http://localhost:8080/agentes
+Content-Type: application/json
+
+{
+  "nome": "Sirleide Gomes da Silva",
+  "telefone": "(33) 98965-9173",
+  "unidadeId": 3,
+  "bairroId": 2
+}
+
+###
+
+### Listar Agentes
+GET http://localhost:8080/agentes
+
+###
+
+### Buscar Agente
+GET http://localhost:8080/agentes/1
+###
+
+### Atualizar Agente
+PUT http://localhost:8080/agentes/1
+Content-Type: application/json
+
+{
+  "nome": "Maria Rosa Soares",
+  "telefone": "(33) 98765-5876",
+  "unidadeId": 1,
+  "bairroId": 1
+}
+###
+
+### Deletar Agente
+DELETE http://localhost:8080/agentes/2
+############################################################################################################
+
+### Cria Visita
+POST http://localhost:8080/visitas
+Content-Type: application/json
+
+{
+  "dataVisita": "2026-02-01T14:00:00",
+  "observacoes": "Paciente com saúde em dia.",
+  "agenteId": 1,
+  "pacienteId": 2
+}
+
+###
+
+### Listar Visitas
+GET http://localhost:8080/visitas
+###
+
+### Buscar Visita
+GET http://localhost:8080/visitas/1
+###
+
+### Atualizar Visita
+PUT http://localhost:8080/visitas/1
+Content-Type: application/json
+
+{
+  "dataVisita": "2026-03-02T14:30:00",
+  "observacoes": "Paciente apresentou sintomas de febre e dor de cabeça.",
+  "agenteId": 1,
+  "pacienteId": 2
+}
+
+###
+
+### Deletar Visita
+DELETE http://localhost:8080/visitas/2
