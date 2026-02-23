@@ -1,5 +1,6 @@
 package br.edu.ufop.tcc.sis_api.model.dto.doenca;
 
+import br.edu.ufop.tcc.sis_api.model.enums.EnumTypeDoenca;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,5 +15,6 @@ import lombok.Setter;
 public class DoencaRequestDTO {
 
     private String nome;
-    private String descricao;
+    private EnumTypeDoenca tipo;
+    private String classificacao;
 }

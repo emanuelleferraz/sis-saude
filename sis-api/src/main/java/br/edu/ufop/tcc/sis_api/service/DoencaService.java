@@ -20,9 +20,10 @@ public class DoencaService {
     public DoencaResponseDTO salvar(DoencaRequestDTO dto) {
 
         DoencaEntity doenca = DoencaEntity.builder()
-                .nome(dto.getNome())
-                .descricao(dto.getDescricao())
-                .build();
+        .nome(dto.getNome())
+        .tipo(dto.getTipo())
+        .classificacao(dto.getClassificacao())
+        .build();
 
         doencaRepository.save(doenca);
         return converter(doenca);
@@ -34,7 +35,8 @@ public class DoencaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Doença não encontrada"));
 
         doenca.setNome(dto.getNome());
-        doenca.setDescricao(dto.getDescricao());
+        doenca.setTipo(dto.getTipo());
+        doenca.setClassificacao(dto.getClassificacao());
 
         doencaRepository.save(doenca);
         return converter(doenca);
@@ -62,10 +64,11 @@ public class DoencaService {
     }
 
     private DoencaResponseDTO converter(DoencaEntity doenca) {
-        return DoencaResponseDTO.builder()
-                .id(doenca.getId())
-                .nome(doenca.getNome())
-                .descricao(doenca.getDescricao())
-                .build();
-    }
+    return DoencaResponseDTO.builder()
+            .id(doenca.getId())
+            .nome(doenca.getNome())
+            .tipo(doenca.getTipo())
+            .classificacao(doenca.getClassificacao())
+            .build();
+}
 }

@@ -1,7 +1,10 @@
 package br.edu.ufop.tcc.sis_api.model.entity;
 
+import br.edu.ufop.tcc.sis_api.model.enums.EnumTypeDoenca;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,6 +32,10 @@ public class DoencaEntity {
     @Column(nullable = false, length = 150)
     private String nome;
 
-    @Column(columnDefinition = "TEXT")
-    private String descricao;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private EnumTypeDoenca tipo;
+
+    @Column(nullable = false, length = 100)
+    private String classificacao;
 }

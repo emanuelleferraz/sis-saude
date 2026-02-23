@@ -122,8 +122,9 @@ POST http://localhost:8080/doencas
 Content-Type: application/json
 
 {
-  "nome": "Diabetes Mellitus Tipo 2",
-  "descricao": "Doença crônica caracterizada pela resistência à insulina e altos níveis de glicose no sangue."
+  "nome": "Diabetes Mellitus",
+  "tipo": "CRONICA",
+  "classificacao": "Metabólica"
 }
 ###
 
@@ -143,13 +144,14 @@ Content-Type: application/json
 
 {
   "nome": "Dengue",
-  "descricao": "Doença transmissível pela picada do mosquito Aedes aegypti."
+  "tipo": "TRANSMISSIVEL",
+  "classificacao": "Viral"
 }
 
 ###
 
 ### Deletar Doença
-DELETE http://localhost:8080/doencas/1
+DELETE http://localhost:8080/doencas/3
 #########################################################################################################
 
 ### Criar Unidade de Saúde
@@ -240,7 +242,7 @@ Content-Type: application/json
   "pacienteId": 2,
   "unidadeId": 1,
   "medicoId": 2,
-  "doencaId": 2
+  "doencaId": 4
 }
 
 ###
@@ -267,7 +269,7 @@ Content-Type: application/json
 ###
 
 ### Deletar Consulta
-DELETE http://localhost:8080/consultas/1
+DELETE http://localhost:8080/consultas/2
 ###########################################################################################################
 
 ### Criar Perfil
