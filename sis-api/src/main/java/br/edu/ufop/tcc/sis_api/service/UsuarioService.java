@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.edu.ufop.tcc.sis_api.exception.EmailAlreadyExistsException;
 import br.edu.ufop.tcc.sis_api.exception.ResourceNotFoundException;
 import br.edu.ufop.tcc.sis_api.model.dto.usuarios.UsuarioRequestDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.usuarios.UsuarioResponseDTO;
@@ -22,13 +23,17 @@ public class UsuarioService {
 
     public UsuarioResponseDTO salvar(UsuarioRequestDTO dto) {
 
+        if (repository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException(dto.getEmail());
+       }
+
         PerfilEntity perfil = perfilRepository.findById(dto.getPerfilId())
                 .orElseThrow(() -> new ResourceNotFoundException("Perfil não encontrado"));
 
         UsuarioEntity usuario = UsuarioEntity.builder()
                 .nome(dto.getNome())
                 .email(dto.getEmail())
-                .senhaHash(dto.getSenha()) // depois pode aplicar hash
+                .senhaHash(dto.getSenha())
                 .perfil(perfil)
                 .build();
 
