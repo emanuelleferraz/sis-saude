@@ -419,3 +419,118 @@ Content-Type: application/json
 
 ### Deletar Visita
 DELETE http://localhost:8080/visitas/2
+#############################################################################################################
+
+### Criar Vacina
+POST http://localhost:8080/vacinas
+Content-Type: application/json
+
+  {
+    "nome": "Febre Amarela",
+    "fabricante": "Bio-Manguinhos/Fiocruz",
+    "dosagem": "Dose única"
+  }
+
+###
+
+### Listar Vacinas
+GET http://localhost:8080/vacinas
+###
+
+### Buscar Vacina
+GET http://localhost:8080/vacinas/1
+###
+
+### Atualizar Vacina
+PUT http://localhost:8080/vacinas/3
+Content-Type: application/json
+
+{
+  "nome": "Febre Amarela",
+  "fabricante": "Fiocruz",
+  "dosagem": "Dose única"
+}
+###
+
+### Deletar Vacina
+DELETE http://localhost:8080/vacinas/3
+#############################################################################################################
+
+### Criar Profissional Enfermagem
+POST http://localhost:8080/enfermeiros
+Content-Type: application/json
+
+{
+  "nome": "Liriamar Oliveira",
+  "coren": "123686",
+  "telefone": "(33) 98785-6321",
+  "unidadeId": 1,
+  "tipo": "Enfermeiro"
+}
+
+###
+
+### Listar Profissionais de Enfermagem
+GET http://localhost:8080/enfermeiros
+###
+
+### Buscar Profissional de Enfermagem
+GET http://localhost:8080/enfermeiros/1
+###
+
+### Atualizar Profissional de Enfermagem
+PUT http://localhost:8080/enfermeiros/1
+Content-Type: application/json
+
+{
+  "nome": "Maria Aparecida Silva",
+  "coren": "153356",
+  "telefone": "(33) 98765-4321",
+  "unidadeId": 1,
+  "tipo": "Enfermeiro"
+}
+
+###
+
+### Deletar Profissional de Enfermagem
+DELETE http://localhost:8080/enfermeiros/2
+##############################################################################################################
+
+### Criar Aplicação de Vacina
+POST http://localhost:8080/aplicacoes-vacina
+Content-Type: application/json
+
+{
+  "dataAplicacao": "2024-12-01T10:00:00",
+  "dose": "Dose anual",
+  "pacienteId": 2,
+  "vacinaId": 1,
+  "enfermeiroId": 1
+}
+
+###
+
+### Listar Aplicações de Vacina
+GET http://localhost:8080/aplicacoes-vacina
+###
+
+### Buscar Aplicação de Vacina
+GET http://localhost:8080/aplicacoes-vacina/1
+###
+
+### Atualizar Aplicação de Vacina
+PUT http://localhost:8080/aplicacoes-vacina/2
+Content-Type: application/json
+
+{
+  "dataAplicacao": "2025-11-01T10:00:00",
+  "dose": "Dose anual",
+  "pacienteId": 2,
+  "vacinaId": 1,
+  "enfermeiroId": 1
+}
+###
+
+### Deletar Aplicação de Vacina
+DELETE http://localhost:8080/aplicacoes-vacina/2
+###############################################################################################################

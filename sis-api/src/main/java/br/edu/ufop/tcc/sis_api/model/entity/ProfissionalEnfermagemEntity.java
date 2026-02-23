@@ -1,7 +1,10 @@
 package br.edu.ufop.tcc.sis_api.model.entity;
 
+import br.edu.ufop.tcc.sis_api.model.enums.EnumTypeEnfermagem;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,7 +39,12 @@ public class ProfissionalEnfermagemEntity {
 
     private String telefone;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo", nullable = false)
+    private EnumTypeEnfermagem tipo;
+
     @ManyToOne
     @JoinColumn(name = "id_unidade", nullable = false)
     private UnidadePsfEntity unidade;
+
 }

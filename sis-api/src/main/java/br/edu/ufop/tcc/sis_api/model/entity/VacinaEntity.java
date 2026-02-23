@@ -29,6 +29,9 @@ public class VacinaEntity {
     @Column(nullable = false, length = 150)
     private String nome;
 
-    @Column(columnDefinition = "TEXT")
-    private String descricao;
+    @Column(nullable = false, length = 150)
+    private String fabricante;
+
+    @Column(nullable = false, length = 50)
+    private String dosagem;
 }
