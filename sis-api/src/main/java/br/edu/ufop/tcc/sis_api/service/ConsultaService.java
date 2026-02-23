@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import br.edu.ufop.tcc.sis_api.model.dto.doenca.DoencaResumoDTO;
+import br.edu.ufop.tcc.sis_api.exception.ResourceNotFoundException;
 import br.edu.ufop.tcc.sis_api.model.dto.indicadores.ConsultaRequestDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.indicadores.ConsultaResponseDTO;
 import br.edu.ufop.tcc.sis_api.model.entity.ConsultaEntity;
@@ -33,15 +33,16 @@ public class ConsultaService {
     public ConsultaResponseDTO salvar(ConsultaRequestDTO dto) {
 
         PacienteEntity paciente = pacienteRepository.findById(dto.getPacienteId())
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
 
         MedicoEntity medico = medicoRepository.findById(dto.getMedicoId())
-                .orElseThrow(() -> new RuntimeException("Médico não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado"));
 
         UnidadePsfEntity unidade = unidadeRepository.findById(dto.getUnidadeId())
-                .orElseThrow(() -> new RuntimeException("Unidade não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada"));
 
-        List<DoencaEntity> doencas = doencaRepository.findAllById(dto.getDoencasIds());
+        DoencaEntity doenca = doencaRepository.findById(dto.getDoencaId())
+                .orElseThrow(() -> new ResourceNotFoundException("Doença não encontrada"));
 
         ConsultaEntity consulta = ConsultaEntity.builder()
                 .dataConsulta(LocalDateTime.parse(dto.getDataConsulta()))
@@ -49,7 +50,7 @@ public class ConsultaService {
                 .paciente(paciente)
                 .medico(medico)
                 .unidade(unidade)
-                .doencas(doencas)
+                .doenca(doenca)
                 .build();
 
         consultaRepository.save(consulta);
@@ -66,7 +67,7 @@ public class ConsultaService {
 
     public ConsultaResponseDTO buscarPorId(Integer id) {
         ConsultaEntity consulta = consultaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada"));
 
         return converterParaResponse(consulta);
     }
@@ -74,25 +75,26 @@ public class ConsultaService {
     public ConsultaResponseDTO atualizar(Integer id, ConsultaRequestDTO dto) {
 
         ConsultaEntity consulta = consultaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Consulta não encontrada"));
 
         PacienteEntity paciente = pacienteRepository.findById(dto.getPacienteId())
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
 
         MedicoEntity medico = medicoRepository.findById(dto.getMedicoId())
-                .orElseThrow(() -> new RuntimeException("Médico não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Médico não encontrado"));
 
         UnidadePsfEntity unidade = unidadeRepository.findById(dto.getUnidadeId())
-                .orElseThrow(() -> new RuntimeException("Unidade não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada"));
 
-        List<DoencaEntity> doencas = doencaRepository.findAllById(dto.getDoencasIds());
+        DoencaEntity doenca = doencaRepository.findById(dto.getDoencaId())
+                .orElseThrow(() -> new ResourceNotFoundException("Doença não encontrada"));
 
         consulta.setDataConsulta(LocalDateTime.parse(dto.getDataConsulta()));
         consulta.setObservacoes(dto.getObservacoes());
         consulta.setPaciente(paciente);
         consulta.setMedico(medico);
         consulta.setUnidade(unidade);
-        consulta.setDoencas(doencas);
+        consulta.setDoenca(doenca);
 
         consultaRepository.save(consulta);
 
@@ -101,32 +103,23 @@ public class ConsultaService {
 
     public void deletar(Integer id) {
         if (!consultaRepository.existsById(id)) {
-            throw new RuntimeException("Consulta não encontrada");
+            throw new ResourceNotFoundException("Consulta não encontrada");
         }
         consultaRepository.deleteById(id);
     }
 
     private ConsultaResponseDTO converterParaResponse(ConsultaEntity consulta) {
 
-        List<DoencaResumoDTO> doencas = consulta.getDoencas()
-                .stream()
-                .map(d -> DoencaResumoDTO.builder()
-                        .id(d.getId())
-                        .nome(d.getNome())
-                        .build())
-                .toList();
+        DoencaEntity doenca = consulta.getDoenca();
 
         return ConsultaResponseDTO.builder()
                 .id(consulta.getId())
                 .dataConsulta(consulta.getDataConsulta().toString())
                 .observacoes(consulta.getObservacoes())
-                .pacienteId(consulta.getPaciente().getId())
                 .pacienteNome(consulta.getPaciente().getNome())
-                .medicoId(consulta.getMedico().getId())
                 .medicoNome(consulta.getMedico().getNome())
-                .unidadeId(consulta.getUnidade().getId())
                 .unidadeNome(consulta.getUnidade().getNome())
-                .doencas(doencas)
+                .doencaNome(doenca.getNome())
                 .build();
     }
 }

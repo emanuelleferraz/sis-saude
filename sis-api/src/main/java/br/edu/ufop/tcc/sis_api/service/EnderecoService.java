@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.edu.ufop.tcc.sis_api.exception.ResourceNotFoundException;
 import br.edu.ufop.tcc.sis_api.model.dto.territoriais.EnderecoRequestDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.territoriais.EnderecoResponseDTO;
 import br.edu.ufop.tcc.sis_api.model.entity.BairroEntity;
@@ -22,7 +23,7 @@ public class EnderecoService {
     public EnderecoResponseDTO salvar(EnderecoRequestDTO dto) {
 
         BairroEntity bairro = bairroRepository.findById(dto.getIdBairro())
-                .orElseThrow(() -> new RuntimeException("Bairro não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Bairro não encontrado"));
 
         EnderecoEntity endereco = EnderecoEntity.builder()
                 .rua(dto.getRua())
@@ -47,7 +48,7 @@ public class EnderecoService {
 
     public EnderecoResponseDTO buscarPorId(Integer id) {
         EnderecoEntity endereco = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado"));
 
         return converterParaResponse(endereco);
     }
@@ -55,10 +56,10 @@ public class EnderecoService {
     public EnderecoResponseDTO atualizar(Integer id, EnderecoRequestDTO dto) {
 
         EnderecoEntity endereco = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado"));
 
         BairroEntity bairro = bairroRepository.findById(dto.getIdBairro())
-                .orElseThrow(() -> new RuntimeException("Bairro não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Bairro não encontrado"));
 
         endereco.setRua(dto.getRua());
         endereco.setNumero(dto.getNumero());

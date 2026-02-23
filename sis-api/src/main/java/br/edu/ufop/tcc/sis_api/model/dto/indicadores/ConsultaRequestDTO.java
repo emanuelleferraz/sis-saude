@@ -1,7 +1,5 @@
 package br.edu.ufop.tcc.sis_api.model.dto.indicadores;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,5 +20,5 @@ public class ConsultaRequestDTO {
     private Integer medicoId;
     private Integer unidadeId;
 
-    private List<Integer> doencasIds;
+    private Integer doencaId;
 }

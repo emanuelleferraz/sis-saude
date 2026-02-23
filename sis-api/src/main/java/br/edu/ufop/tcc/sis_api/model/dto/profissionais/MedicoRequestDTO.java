@@ -16,4 +16,5 @@ public class MedicoRequestDTO {
     private String nome;
     private String crm;
     private String especialidade;
+    private Integer unidadeId;
 }

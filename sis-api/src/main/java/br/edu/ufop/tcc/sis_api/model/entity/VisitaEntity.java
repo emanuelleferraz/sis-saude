@@ -1,7 +1,6 @@
 package br.edu.ufop.tcc.sis_api.model.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,8 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -47,11 +44,4 @@ public class VisitaEntity {
     @JoinColumn(name = "id_agente", nullable = false)
     private AgenteSaudeEntity agente;
 
-    @ManyToMany
-    @JoinTable(
-        name = "visita_doenca",
-        joinColumns = @JoinColumn(name = "id_visita"),
-        inverseJoinColumns = @JoinColumn(name = "id_doenca")
-    )
-    private List<DoencaEntity> doencas;
 }

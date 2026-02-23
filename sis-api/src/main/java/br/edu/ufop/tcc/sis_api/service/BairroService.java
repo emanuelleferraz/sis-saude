@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.edu.ufop.tcc.sis_api.exception.ResourceNotFoundException;
 import br.edu.ufop.tcc.sis_api.model.dto.territoriais.BairroRequestDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.territoriais.BairroResponseDTO;
 import br.edu.ufop.tcc.sis_api.model.entity.BairroEntity;
@@ -36,7 +37,7 @@ public class BairroService {
 
     public BairroResponseDTO buscarPorId(Integer id) {
         BairroEntity bairro = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Bairro não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Bairro não encontrado"));
 
         return converterParaResponse(bairro);
     }
@@ -44,7 +45,7 @@ public class BairroService {
     public BairroResponseDTO atualizar(Integer id, BairroRequestDTO dto) {
 
         BairroEntity bairro = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Bairro não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Bairro não encontrado"));
 
         bairro.setNome(dto.getNome());
 

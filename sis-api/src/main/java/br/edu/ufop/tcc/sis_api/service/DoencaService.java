@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.edu.ufop.tcc.sis_api.exception.ResourceNotFoundException;
 import br.edu.ufop.tcc.sis_api.model.dto.doenca.DoencaRequestDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.doenca.DoencaResponseDTO;
 import br.edu.ufop.tcc.sis_api.model.entity.DoencaEntity;
@@ -30,7 +31,7 @@ public class DoencaService {
     public DoencaResponseDTO atualizar(Integer id, DoencaRequestDTO dto) {
 
         DoencaEntity doenca = doencaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Doença não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Doença não encontrada"));
 
         doenca.setNome(dto.getNome());
         doenca.setDescricao(dto.getDescricao());
@@ -48,14 +49,14 @@ public class DoencaService {
 
     public DoencaResponseDTO buscarPorId(Integer id) {
         DoencaEntity doenca = doencaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Doença não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Doença não encontrada"));
 
         return converter(doenca);
     }
 
     public void deletar(Integer id) {
         if (!doencaRepository.existsById(id)) {
-            throw new RuntimeException("Doença não encontrada");
+            throw new ResourceNotFoundException("Doença não encontrada");
         }
         doencaRepository.deleteById(id);
     }

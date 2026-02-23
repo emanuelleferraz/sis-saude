@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.edu.ufop.tcc.sis_api.exception.ResourceNotFoundException;
 import br.edu.ufop.tcc.sis_api.model.dto.unidade.UnidadeRequestDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.unidade.UnidadeResponseDTO;
 import br.edu.ufop.tcc.sis_api.model.entity.EnderecoEntity;
@@ -22,7 +23,7 @@ public class UnidadeService {
     public UnidadeResponseDTO salvar(UnidadeRequestDTO dto) {
 
         EnderecoEntity endereco = enderecoRepository.findById(dto.getEnderecoId())
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado"));
 
         UnidadePsfEntity unidade = UnidadePsfEntity.builder()
                 .nome(dto.getNome())
@@ -38,10 +39,10 @@ public class UnidadeService {
     public UnidadeResponseDTO atualizar(Integer id, UnidadeRequestDTO dto) {
 
         UnidadePsfEntity unidade = unidadeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Unidade não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada"));
 
         EnderecoEntity endereco = enderecoRepository.findById(dto.getEnderecoId())
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado"));
 
         unidade.setNome(dto.getNome());
         unidade.setTelefone(dto.getTelefone());
@@ -62,14 +63,14 @@ public class UnidadeService {
     public UnidadeResponseDTO buscarPorId(Integer id) {
 
         UnidadePsfEntity unidade = unidadeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Unidade não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada"));
 
         return converter(unidade);
     }
 
     public void deletar(Integer id) {
         if (!unidadeRepository.existsById(id)) {
-            throw new RuntimeException("Unidade não encontrada");
+            throw new ResourceNotFoundException("Unidade não encontrada");
         }
         unidadeRepository.deleteById(id);
     }

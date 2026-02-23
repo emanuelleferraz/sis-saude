@@ -3,7 +3,7 @@ POST http://localhost:8080/bairros
 Content-Type: application/json
 
 {
-  "nome": "Laranjeiras"
+  "nome": "Serra Pelada"
 }
 
 ###
@@ -30,16 +30,16 @@ Content-Type: application/json
 
 ### Deletar Bairro
 DELETE http://localhost:8080/bairros/3
-############################################################
+#########################################################################################################
 
 ### Criar Endereco
 POST http://localhost:8080/enderecos
 Content-Type: application/json
 
 {
-  "rua": "Rua Treze de Janeiro",
-  "numero": "705",
-  "complemento": "Casa",
+  "rua": "Rua Beira Rio",
+  "numero": "354",
+  "complemento": "UBS",
   "cep": "39935-000",
   "cidade": "Santo Antônio do Jacinto",
   "idBairro": 1
@@ -74,7 +74,8 @@ Content-Type: application/json
 
 ### Deletar Endereco
 DELETE http://localhost:8080/enderecos/2
-#############################################################
+#########################################################################################################
+
 ### Criar Paciente
 POST http://localhost:8080/pacientes
 Content-Type: application/json
@@ -115,3 +116,155 @@ Content-Type: application/json
 
 ### Deletar Paciente
 DELETE http://localhost:8080/pacientes/1
+#########################################################################################################
+### Criar Doenca
+POST http://localhost:8080/doencas
+Content-Type: application/json
+
+{
+  "nome": "Diabetes Mellitus Tipo 2",
+  "descricao": "Doença crônica caracterizada pela resistência à insulina e altos níveis de glicose no sangue."
+}
+###
+
+### Listar Doenças
+GET http://localhost:8080/doencas
+
+###
+
+### Buscar Doença
+GET http://localhost:8080/doencas/3
+
+###
+
+### Atualizar Doença
+PUT http://localhost:8080/doencas/1
+Content-Type: application/json
+
+{
+  "nome": "Dengue",
+  "descricao": "Doença transmissível pela picada do mosquito Aedes aegypti."
+}
+
+###
+
+### Deletar Doença
+DELETE http://localhost:8080/doencas/1
+#########################################################################################################
+
+### Criar Unidade de Saúde
+POST http://localhost:8080/unidades
+Content-Type: application/json
+
+{
+  "nome": "UBS ESF Saúde Para Todos",
+  "telefone": "(33) 3424-1544",
+  "enderecoId": 4
+}
+
+###
+
+### Listar Unidades de Saúde
+GET http://localhost:8080/unidades
+
+###
+
+### Buscar Unidade
+GET http://localhost:8080/unidades/1
+
+###
+
+### Atualizar Unidade
+PUT http://localhost:8080/unidades/1
+Content-Type: application/json
+
+{
+  "nome": "UBS Dona Carmita Freitas dos Santos",
+  "telefone": "(33) 3424-1534",
+  "enderecoId": 3
+}
+
+###
+
+### Deletar Unidade
+DELETE http://localhost:8080/unidades/2
+#########################################################################################################
+
+### Criar Médico
+POST http://localhost:8080/medicos
+Content-Type: application/json
+
+{
+  "nome": "Yure Brito",
+  "crm": "123456",
+  "especialidade": "Clínico Geral",
+  "unidadeId": 1
+}
+###
+
+### Listar Médicos
+GET http://localhost:8080/medicos
+
+###
+
+### Buscar Médico
+GET http://localhost:8080/medicos/2
+
+###
+
+### Atualizar Médico
+PUT http://localhost:8080/medicos/2
+Content-Type: application/json
+
+{
+  "nome": "Yure Brito",
+  "crm": "654321",
+  "especialidade": "Clínico Geral",
+  "unidadeId": 1
+}
+
+###
+
+### Deletar Médico
+DELETE http://localhost:8080/medicos/1
+
+##########################################################################################################
+
+### Criar Consulta
+POST http://localhost:8080/consultas
+Content-Type: application/json
+
+{
+  "dataConsulta": "2026-02-23T11:00:00",
+  "observacoes": "Paciente apresentou sintomas de febre e dor de cabeça.",
+  "pacienteId": 2,
+  "unidadeId": 1,
+  "medicoId": 2,
+  "doencaId": 2
+}
+
+###
+
+### Listar Consultas
+GET http://localhost:8080/consultas
+
+### Buscar Consulta
+GET http://localhost:8080/consultas/2
+
+### Atualizar Consulta
+PUT http://localhost:8080/consultas/2
+Content-Type: application/json
+
+{
+  "dataConsulta": "2026-02-24T11:30:00",
+  "observacoes": "Paciente apresentou sintomas de febre, dor de cabeça.",
+  "pacienteId": 2,
+  "unidadeId": 1,
+  "medicoId": 2,
+  "doencaId": 2
+}
+
+###
+
+### Deletar Consulta
+DELETE http://localhost:8080/consultas/1

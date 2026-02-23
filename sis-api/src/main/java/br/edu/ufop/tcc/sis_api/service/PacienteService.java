@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.edu.ufop.tcc.sis_api.exception.ResourceNotFoundException;
 import br.edu.ufop.tcc.sis_api.model.dto.paciente.PacienteRequestDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.paciente.PacienteResponseDTO;
 import br.edu.ufop.tcc.sis_api.model.entity.EnderecoEntity;
@@ -27,7 +28,7 @@ public class PacienteService {
         cpfValidator.validar(dto.getCpf());
 
         EnderecoEntity endereco = enderecoRepository.findById(dto.getIdEndereco())
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado"));
 
         PacienteEntity paciente = PacienteEntity.builder()
                 .nome(dto.getNome())
@@ -51,7 +52,7 @@ public class PacienteService {
 
     public PacienteResponseDTO buscarPorId(Integer id) {
         PacienteEntity paciente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
 
         return converterParaResponse(paciente);
     }
@@ -61,10 +62,10 @@ public class PacienteService {
         cpfValidator.validar(dto.getCpf());
 
         PacienteEntity paciente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Paciente não encontrado"));
 
         EnderecoEntity endereco = enderecoRepository.findById(dto.getIdEndereco())
-                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado"));
 
         paciente.setNome(dto.getNome());
         paciente.setCpf(dto.getCpf());
