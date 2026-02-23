@@ -1,6 +1,5 @@
 package br.edu.ufop.tcc.sis_api.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class ConsultaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Doença não encontrada"));
 
         ConsultaEntity consulta = ConsultaEntity.builder()
-                .dataConsulta(LocalDateTime.parse(dto.getDataConsulta()))
+                .dataConsulta(dto.getDataConsulta())
                 .observacoes(dto.getObservacoes())
                 .paciente(paciente)
                 .medico(medico)
@@ -89,7 +88,7 @@ public class ConsultaService {
         DoencaEntity doenca = doencaRepository.findById(dto.getDoencaId())
                 .orElseThrow(() -> new ResourceNotFoundException("Doença não encontrada"));
 
-        consulta.setDataConsulta(LocalDateTime.parse(dto.getDataConsulta()));
+        consulta.setDataConsulta(dto.getDataConsulta());
         consulta.setObservacoes(dto.getObservacoes());
         consulta.setPaciente(paciente);
         consulta.setMedico(medico);
@@ -114,7 +113,7 @@ public class ConsultaService {
 
         return ConsultaResponseDTO.builder()
                 .id(consulta.getId())
-                .dataConsulta(consulta.getDataConsulta().toString())
+                .dataConsulta(consulta.getDataConsulta())
                 .observacoes(consulta.getObservacoes())
                 .pacienteNome(consulta.getPaciente().getNome())
                 .medicoNome(consulta.getMedico().getNome())

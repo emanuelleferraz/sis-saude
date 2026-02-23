@@ -237,8 +237,8 @@ POST http://localhost:8080/consultas
 Content-Type: application/json
 
 {
-  "dataConsulta": "2026-02-23T11:00:00",
-  "observacoes": "Paciente apresentou sintomas de febre e dor de cabeça.",
+  "dataConsulta": "2025-07-19T11:00:00",
+  "observacoes": "Paciente apresentou sintomas de dor de cabeça.",
   "pacienteId": 2,
   "unidadeId": 1,
   "medicoId": 2,
@@ -534,3 +534,7 @@ Content-Type: application/json
 ### Deletar Aplicação de Vacina
 DELETE http://localhost:8080/aplicacoes-vacina/2
 ###############################################################################################################
+
+### Visualizar Resumo
+GET http://localhost:8080/pacientes/2/resumo
+###
