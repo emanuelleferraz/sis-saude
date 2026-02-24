@@ -1,6 +1,5 @@
 package br.edu.ufop.tcc.sis_api.service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class PacienteService {
                 .nome(dto.getNome())
                 .cpf(dto.getCpf())
                 .telefone(dto.getTelefone())
-                .dataNascimento(LocalDate.parse(dto.getDataNascimento()))
+                .dataNascimento(dto.getDataNascimento())
                 .sexo(dto.getSexo())
                 .endereco(endereco)
                 .build();
@@ -71,7 +70,7 @@ public class PacienteService {
         paciente.setNome(dto.getNome());
         paciente.setCpf(dto.getCpf());
         paciente.setTelefone(dto.getTelefone());
-        paciente.setDataNascimento(LocalDate.parse(dto.getDataNascimento()));
+        paciente.setDataNascimento(dto.getDataNascimento());
         paciente.setSexo(dto.getSexo());
         paciente.setEndereco(endereco);
 
@@ -98,8 +97,9 @@ public class PacienteService {
                 .cpf(paciente.getCpf())
                 .telefone(paciente.getTelefone())
                 .cidade(paciente.getEndereco().getCidade())
-                .dataNascimento(paciente.getDataNascimento().toString())
+                .dataNascimento(paciente.getDataNascimento())
                 .sexo(paciente.getSexo())
+                .idEndereco(paciente.getEndereco().getId())
                 .enderecoDescricao(enderecoFormatado)
                 .bairro(paciente.getEndereco().getBairro().getNome())
                 .build();
