@@ -81,11 +81,11 @@ POST http://localhost:8080/pacientes
 Content-Type: application/json
 
 {
-  "nome": "Arlando Ferreira Lima",
-  "cpf": "12345678900",
-  "dataNascimento": "1981-03-01",
-  "sexo": "MASCULINO",
-  "telefone": "(33) 98858-2438",
+  "nome": "Maria Fernanda Ferraz Brito de Oliveira",
+  "cpf": "00011100045",
+  "dataNascimento": "2019-04-17",
+  "sexo": "FEMININO",
+  "telefone": "(33) 98843-5416",
   "idEndereco": 1
 }
 

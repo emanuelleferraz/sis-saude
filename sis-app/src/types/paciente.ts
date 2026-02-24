@@ -6,5 +6,9 @@ export interface PacienteResponseDTO {
   dataNascimento: string;
   telefone: string;
   sexo: 'MASCULINO' | 'FEMININO' | 'OUTRO';
-  doencas: string[];
+  bairro: string;
+
+  endereco: string;  
+  idEndereco: number;
+
 }
