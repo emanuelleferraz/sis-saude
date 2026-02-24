@@ -74,6 +74,7 @@ public class PacienteResumoService {
                 .nome(paciente.getNome())
                 .cpf(paciente.getCpf())
                 .dataNascimento(paciente.getDataNascimento())
+                .sexo(paciente.getSexo())
                 .telefone(paciente.getTelefone())
                 .consultas(consultas)
                 .vacinas(vacinas)

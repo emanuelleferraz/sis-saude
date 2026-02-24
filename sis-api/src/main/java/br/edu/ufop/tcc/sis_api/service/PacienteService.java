@@ -35,6 +35,7 @@ public class PacienteService {
                 .cpf(dto.getCpf())
                 .telefone(dto.getTelefone())
                 .dataNascimento(LocalDate.parse(dto.getDataNascimento()))
+                .sexo(dto.getSexo())
                 .endereco(endereco)
                 .build();
 
@@ -71,6 +72,7 @@ public class PacienteService {
         paciente.setCpf(dto.getCpf());
         paciente.setTelefone(dto.getTelefone());
         paciente.setDataNascimento(LocalDate.parse(dto.getDataNascimento()));
+        paciente.setSexo(dto.getSexo());
         paciente.setEndereco(endereco);
 
         repository.save(paciente);
@@ -97,6 +99,7 @@ public class PacienteService {
                 .telefone(paciente.getTelefone())
                 .cidade(paciente.getEndereco().getCidade())
                 .dataNascimento(paciente.getDataNascimento().toString())
+                .sexo(paciente.getSexo())
                 .enderecoDescricao(enderecoFormatado)
                 .bairro(paciente.getEndereco().getBairro().getNome())
                 .build();

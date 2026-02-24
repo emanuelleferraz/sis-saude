@@ -81,9 +81,10 @@ POST http://localhost:8080/pacientes
 Content-Type: application/json
 
 {
-  "nome": "Gleiziane Ferraz Aguiar Lima",
+  "nome": "Arlando Ferreira Lima",
   "cpf": "12345678900",
-  "dataNascimento": "1982-04-15",
+  "dataNascimento": "1981-03-01",
+  "sexo": "MASCULINO",
   "telefone": "(33) 98858-2438",
   "idEndereco": 1
 }
@@ -101,13 +102,14 @@ GET http://localhost:8080/pacientes/1
 ###
 
 ### Atualizar Paciente
-PUT http://localhost:8080/pacientes/1
+PUT http://localhost:8080/pacientes/2
 Content-Type: application/json
 
 {
   "nome": "Gleiziane Ferraz Aguiar Lima",
   "cpf": "12345678901",
   "dataNascimento": "1982-04-15",
+  "sexo": "FEMININO",
   "telefone": "(33) 98858-2439",
   "idEndereco": 1
 }

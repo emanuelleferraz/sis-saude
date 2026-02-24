@@ -3,6 +3,7 @@ package br.edu.ufop.tcc.sis_api.model.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import br.edu.ufop.tcc.sis_api.model.enums.EnumSexoPaciente;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,6 +42,8 @@ public class PacienteEntity {
 
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
+
+    private EnumSexoPaciente sexo;
 
     private String telefone;
 
