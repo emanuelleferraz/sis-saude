@@ -279,7 +279,7 @@ POST http://localhost:8080/perfis
 Content-Type: application/json
 
 {
-  "nome": "Outro"
+  "nome": "Colaborador"
 }
 
 ###
