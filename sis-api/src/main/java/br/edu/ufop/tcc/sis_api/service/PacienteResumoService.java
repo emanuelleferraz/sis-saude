@@ -64,8 +64,8 @@ public class PacienteResumoService {
                         .id(v.getId())
                         .dataVisita(v.getDataVisita())
                         .observacoes(v.getObservacoes())
-                        .pacienteId(v.getPaciente().getId())
-                        .agenteId(v.getAgente().getId())
+                        .nomePaciente(v.getPaciente().getNome())
+                        .nomeAgente(v.getAgente().getNome())
                         .build()
                 ).toList();
 

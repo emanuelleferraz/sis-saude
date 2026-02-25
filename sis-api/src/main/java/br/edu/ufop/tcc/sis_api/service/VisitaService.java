@@ -91,8 +91,8 @@ public class VisitaService {
                 .id(visita.getId())
                 .dataVisita(visita.getDataVisita())
                 .observacoes(visita.getObservacoes())
-                .pacienteId(visita.getPaciente().getId())
-                .agenteId(visita.getAgente().getId())
+                .nomePaciente(visita.getPaciente().getNome())
+                .nomeAgente(visita.getAgente().getNome())
                 .build();
     }
 }
