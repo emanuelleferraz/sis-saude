@@ -80,6 +80,7 @@ public class ProfissionalEnfermagemService {
                 .telefone(e.getTelefone())
                 .tipo(e.getTipo())
                 .unidadeId(e.getUnidade().getId())
+                .nomeUnidade(e.getUnidade().getNome())
                 .build();
     }
 }
