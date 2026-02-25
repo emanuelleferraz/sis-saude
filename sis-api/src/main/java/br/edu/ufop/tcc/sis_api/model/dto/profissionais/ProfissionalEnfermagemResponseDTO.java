@@ -19,5 +19,6 @@ public class ProfissionalEnfermagemResponseDTO {
     private String coren;
     private String telefone;
     private Integer unidadeId;
+    private String nomeUnidade;
     private EnumTypeEnfermagem tipo;
 }

@@ -204,7 +204,7 @@ export default function VacinasPage({ onBack }: VacinasPageProps) {
                   />
                 </div>
                 <Button
-                  onClick={() => setIsRegisterOpen(true)}
+                  onClick={() => {resetForm(); setIsRegisterOpen(true);}}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
