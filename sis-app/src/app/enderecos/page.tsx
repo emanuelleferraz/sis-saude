@@ -351,6 +351,10 @@ export default function EnderecosPage({ onBack }: EnderecosPageProps) {
                 </SelectContent>
               </Select>
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="complemento">Complemento</Label>
+              <Input id="complemento" placeholder="Digite o complemento" value={complemento} onChange={(e) => setComplemento(e.target.value)} />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsRegisterOpen(false)}>
@@ -403,6 +407,10 @@ export default function EnderecosPage({ onBack }: EnderecosPageProps) {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="complemento">Complemento</Label>
+              <Input id="complemento" placeholder="Digite o complemento" value={complemento} onChange={(e) => setComplemento(e.target.value)} />
             </div>
           </div>
           <DialogFooter>

@@ -49,7 +49,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Bairro } from "@/types/bairro";
-import { Endereco } from "@/types/endereco";
+import { EnderecoResponseDTO } from "@/types/endereco";
 import { listarBairros } from "@/services/bairroService";
 import { listarEnderecos } from "@/services/enderecoService";
 
@@ -83,7 +83,7 @@ export default function PacientesPage({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [bairros, setBairros] = useState<Bairro[]>([]);
-  const [enderecos, setEnderecos] = useState<Endereco[]>([]);
+  const [enderecos, setEnderecos] = useState<EnderecoResponseDTO[]>([]);
 
   useEffect(() => {
     const fetchPacientes = async () => {
