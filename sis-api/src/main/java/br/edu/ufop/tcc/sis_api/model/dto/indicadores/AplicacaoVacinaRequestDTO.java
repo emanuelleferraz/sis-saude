@@ -1,6 +1,6 @@
 package br.edu.ufop.tcc.sis_api.model.dto.indicadores;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,9 +15,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AplicacaoVacinaRequestDTO {
 
-    private LocalDateTime dataAplicacao;
+    private LocalDate dataAplicacao;
     private String dose;
     private Integer pacienteId;
     private Integer vacinaId;
     private Integer enfermeiroId;
+    private Integer unidadeId;
 }

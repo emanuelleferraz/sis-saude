@@ -10,10 +10,12 @@ import br.edu.ufop.tcc.sis_api.model.dto.indicadores.AplicacaoVacinaResponseDTO;
 import br.edu.ufop.tcc.sis_api.model.entity.AplicacaoVacinaEntity;
 import br.edu.ufop.tcc.sis_api.model.entity.PacienteEntity;
 import br.edu.ufop.tcc.sis_api.model.entity.ProfissionalEnfermagemEntity;
+import br.edu.ufop.tcc.sis_api.model.entity.UnidadePsfEntity;
 import br.edu.ufop.tcc.sis_api.model.entity.VacinaEntity;
 import br.edu.ufop.tcc.sis_api.repository.AplicacaoVacinaRepository;
 import br.edu.ufop.tcc.sis_api.repository.PacienteRepository;
 import br.edu.ufop.tcc.sis_api.repository.ProfissionalEnfermagemRepository;
+import br.edu.ufop.tcc.sis_api.repository.UnidadeRepository;
 import br.edu.ufop.tcc.sis_api.repository.VacinaRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +27,7 @@ public class AplicacaoVacinaService {
     private final PacienteRepository pacienteRepository;
     private final VacinaRepository vacinaRepository;
     private final ProfissionalEnfermagemRepository profissionalRepository;
+    private final UnidadeRepository unidadeRepository;
 
     public AplicacaoVacinaResponseDTO salvar(AplicacaoVacinaRequestDTO dto) {
 
@@ -37,12 +40,16 @@ public class AplicacaoVacinaService {
         ProfissionalEnfermagemEntity enfermeiro = profissionalRepository.findById(dto.getEnfermeiroId())
                 .orElseThrow(() -> new ResourceNotFoundException("Profissional não encontrado"));
 
+        UnidadePsfEntity unidade = unidadeRepository.findById(dto.getUnidadeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada"));
+
         AplicacaoVacinaEntity aplicacao = AplicacaoVacinaEntity.builder()
                 .dataAplicacao(dto.getDataAplicacao())
                 .dose(dto.getDose())
                 .paciente(paciente)
                 .vacina(vacina)
                 .enfermeiro(enfermeiro)
+                .unidade(unidade)
                 .build();
 
         aplicacaoRepository.save(aplicacao);
@@ -79,11 +86,15 @@ public class AplicacaoVacinaService {
         ProfissionalEnfermagemEntity enfermeiro = profissionalRepository.findById(dto.getEnfermeiroId())
                 .orElseThrow(() -> new ResourceNotFoundException("Profissional não encontrado"));
 
+        UnidadePsfEntity unidade = unidadeRepository.findById(dto.getUnidadeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada"));
+
         aplicacao.setDataAplicacao(dto.getDataAplicacao());
         aplicacao.setDose(dto.getDose());
         aplicacao.setPaciente(paciente);
         aplicacao.setVacina(vacina);
         aplicacao.setEnfermeiro(enfermeiro);
+        aplicacao.setUnidade(unidade);
 
         aplicacaoRepository.save(aplicacao);
 
@@ -108,6 +119,7 @@ public class AplicacaoVacinaService {
                 .nomePaciente(aplicacao.getPaciente().getNome())
                 .nomeVacina(aplicacao.getVacina().getNome())
                 .nomeEnfermeiro(aplicacao.getEnfermeiro().getNome())
+                .nomeUnidade(aplicacao.getUnidade().getNome())
                 .build();
     }
 }

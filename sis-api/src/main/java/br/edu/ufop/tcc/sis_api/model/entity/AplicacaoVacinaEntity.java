@@ -1,6 +1,6 @@
 package br.edu.ufop.tcc.sis_api.model.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,7 +31,7 @@ public class AplicacaoVacinaEntity {
     private Integer id;
 
     @Column(name = "data_aplicacao", nullable = false)
-    private LocalDateTime dataAplicacao;
+    private LocalDate dataAplicacao;
 
     private String dose;
 
@@ -46,4 +46,8 @@ public class AplicacaoVacinaEntity {
     @ManyToOne
     @JoinColumn(name = "id_enfermeiro", nullable = false)
     private ProfissionalEnfermagemEntity enfermeiro;
+
+    @ManyToOne
+    @JoinColumn(name = "id_unidade", nullable = false)
+    private UnidadePsfEntity unidade;
 }
