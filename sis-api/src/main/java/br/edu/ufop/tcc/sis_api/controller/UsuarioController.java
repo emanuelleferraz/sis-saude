@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ufop.tcc.sis_api.model.dto.usuarios.UsuarioRequestDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.usuarios.UsuarioResponseDTO;
+import br.edu.ufop.tcc.sis_api.model.dto.usuarios.UsuarioUpdateDTO;
 import br.edu.ufop.tcc.sis_api.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
@@ -40,7 +41,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public UsuarioResponseDTO atualizar(@PathVariable Integer id,
-                                        @RequestBody UsuarioRequestDTO dto) {
+                                        @RequestBody UsuarioUpdateDTO dto) {
         return service.atualizar(id, dto);
     }
 

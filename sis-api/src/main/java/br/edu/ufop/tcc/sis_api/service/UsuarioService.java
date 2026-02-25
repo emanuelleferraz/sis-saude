@@ -8,6 +8,7 @@ import br.edu.ufop.tcc.sis_api.exception.EmailAlreadyExistsException;
 import br.edu.ufop.tcc.sis_api.exception.ResourceNotFoundException;
 import br.edu.ufop.tcc.sis_api.model.dto.usuarios.UsuarioRequestDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.usuarios.UsuarioResponseDTO;
+import br.edu.ufop.tcc.sis_api.model.dto.usuarios.UsuarioUpdateDTO;
 import br.edu.ufop.tcc.sis_api.model.entity.PerfilEntity;
 import br.edu.ufop.tcc.sis_api.model.entity.UsuarioEntity;
 import br.edu.ufop.tcc.sis_api.repository.PerfilRepository;
@@ -56,7 +57,7 @@ public class UsuarioService {
         return converterParaResponse(usuario);
     }
 
-    public UsuarioResponseDTO atualizar(Integer id, UsuarioRequestDTO dto) {
+    public UsuarioResponseDTO atualizar(Integer id, UsuarioUpdateDTO dto) {
 
         UsuarioEntity usuario = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
@@ -66,7 +67,6 @@ public class UsuarioService {
 
         usuario.setNome(dto.getNome());
         usuario.setEmail(dto.getEmail());
-        usuario.setSenhaHash(dto.getSenha());
         usuario.setPerfil(perfil);
 
         repository.save(usuario);
