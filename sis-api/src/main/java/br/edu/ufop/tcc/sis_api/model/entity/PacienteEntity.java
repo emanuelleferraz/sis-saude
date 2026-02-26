@@ -6,6 +6,8 @@ import java.util.List;
 import br.edu.ufop.tcc.sis_api.model.enums.EnumSexoPaciente;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -43,6 +45,8 @@ public class PacienteEntity {
     @Column(name = "data_nascimento")
     private LocalDate dataNascimento;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sexo", nullable = false)
     private EnumSexoPaciente sexo;
 
     private String telefone;
