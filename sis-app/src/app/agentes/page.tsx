@@ -335,7 +335,7 @@ export default function AgentesPage({ onBack }: AgentesPageProps) {
       </div>
       {/* MODAL DE CREATE */}
       <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Registrar Agente de Saúde</DialogTitle>
             <DialogDescription>
