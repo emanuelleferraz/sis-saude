@@ -503,11 +503,12 @@ POST http://localhost:8080/aplicacoes-vacina
 Content-Type: application/json
 
 {
-  "dataAplicacao": "2024-12-01T10:00:00",
+  "dataAplicacao": "2025-12-01",
   "dose": "Dose anual",
   "pacienteId": 2,
   "vacinaId": 1,
-  "enfermeiroId": 1
+  "enfermeiroId": 1,
+  "unidadeId": 5
 }
 
 ###

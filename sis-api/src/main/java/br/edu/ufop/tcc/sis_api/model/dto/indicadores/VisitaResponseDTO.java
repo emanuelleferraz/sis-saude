@@ -18,6 +18,6 @@ public class VisitaResponseDTO {
     private Integer id;
     private LocalDateTime dataVisita;
     private String observacoes;
-    private Integer pacienteId;
-    private Integer agenteId;
+    private String nomePaciente;
+    private String nomeAgente;
 }
