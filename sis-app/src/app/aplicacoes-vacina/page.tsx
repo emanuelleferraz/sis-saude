@@ -423,7 +423,7 @@ export default function RegistroVacinacaoPage({ onBack }: RegistroVacinacaoPageP
 
             {/* Select Enfermeiro */}
             <div className="grid gap-2">
-              <Label>Enfermeiro</Label>
+              <Label>Enfermeiro/Técnico</Label>
               <Select
                 value={enfermeiroId?.toString() || ""}
                 onValueChange={(value) => setEnfermeiroId(Number(value))}
@@ -557,7 +557,7 @@ export default function RegistroVacinacaoPage({ onBack }: RegistroVacinacaoPageP
 
             {/* Select Enfermeiro */}
             <div className="grid gap-2">
-              <Label>Enfermeiro</Label>
+              <Label>Enfermeiro/Técnico</Label>
               <Select
                 value={enfermeiroId?.toString() || ""}
                 onValueChange={(value) => setEnfermeiroId(Number(value))}
