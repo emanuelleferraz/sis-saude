@@ -22,4 +22,6 @@ public class DashboardVacinaDTO {
     private List<EvolucaoDosesTrimestreDTO> evolucaoTrimestral; 
 
     private List<CoberturaVacinalBairroDTO> coberturaPorBairro; 
+
+    private List<AplicacaoPorUnidadeDTO> aplicacoesPorUnidade;
 }

@@ -38,6 +38,7 @@ public class DashboardVacinaService {
                 .distribuicaoVacinas(repository.distribuicaoPorVacina())
                 .evolucaoTrimestral(repository.evolucaoTrimestral())
                 .coberturaPorBairro(repository.coberturaVacinalPorBairro())
+                .aplicacoesPorUnidade(repository.aplicacoesPorUnidade())
                 .build();
     }
 }

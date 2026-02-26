@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AlertaBairroDTO {
     private String bairro;
+    private String doenca;
     private Long totalCasos;
-    private Double variacaoPercentual;
     private String nivelAlerta;
 }

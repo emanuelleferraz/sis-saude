@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import br.edu.ufop.tcc.sis_api.model.dto.dashboards.vacina.AplicacaoPorUnidadeDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.dashboards.vacina.CoberturaVacinalBairroDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.dashboards.vacina.DistribuicaoVacinaDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.dashboards.vacina.EvolucaoDosesTrimestreDTO;
@@ -88,4 +89,17 @@ public interface DashboardVacinaRepository extends JpaRepository<AplicacaoVacina
         ORDER BY COUNT(a) DESC
     """)
     List<CoberturaVacinalBairroDTO> coberturaVacinalPorBairro();
+
+    // APLICAÇÕES POR UNIDADE
+    @Query("""
+        SELECT new br.edu.ufop.tcc.sis_api.model.dto.dashboards.vacina.AplicacaoPorUnidadeDTO(
+            a.unidade.nome,
+            a.vacina.nome,
+            COUNT(a)
+        )
+        FROM AplicacaoVacinaEntity a
+        GROUP BY a.unidade.nome, a.vacina.nome
+        ORDER BY a.unidade.nome, a.vacina.nome
+    """)
+    List<AplicacaoPorUnidadeDTO> aplicacoesPorUnidade();
 }
