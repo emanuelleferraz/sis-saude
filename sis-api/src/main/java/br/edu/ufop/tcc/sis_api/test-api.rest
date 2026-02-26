@@ -541,3 +541,18 @@ DELETE http://localhost:8080/aplicacoes-vacina/2
 ### Visualizar Resumo
 GET http://localhost:8080/pacientes/2/resumo
 ###
+
+###############################################################################################################
+### Dashboard Vacinas
+GET http://localhost:8080/dashboard/vacinas
+###
+###############################################################################################################
+
+### Dashboard Doenças Crônicas
+GET http://localhost:8080/dashboard/cronicas
+###
+###############################################################################################################
+
+### Dashboard Doenças Transmissíveis
+GET http://localhost:8080/dashboard/epidemiologicas
+###
