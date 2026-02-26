@@ -52,6 +52,7 @@ import { Bairro } from "@/types/bairro";
 import { EnderecoResponseDTO } from "@/types/endereco";
 import { listarBairros } from "@/services/bairroService";
 import { listarEnderecos } from "@/services/enderecoService";
+import { useRouter } from "next/navigation";
 
 interface PacientesPageProps {
   onBack: () => void;
@@ -77,6 +78,8 @@ export default function PacientesPage({
       return "Pacientes - Doenças Epidemiológicas";
     return "Pacientes";
   };
+
+  const router = useRouter();
 
   // Criando os estados reais dos pacientes e seus atributos
   const [pacientes, setPacientes] = useState<PacienteResponseDTO[]>([]);
@@ -290,7 +293,8 @@ export default function PacientesPage({
                       <TableCell>{formatCPF(paciente.cpf)}</TableCell>
                       <TableCell>
                         {new Date(paciente.dataNascimento).toLocaleDateString(
-                          "pt-BR", {timeZone: "UTC"},
+                          "pt-BR",
+                          { timeZone: "UTC" },
                         )}
                       </TableCell>
                       <TableCell>{paciente.sexo}</TableCell>
@@ -314,14 +318,14 @@ export default function PacientesPage({
                         >
                           <Trash2 className="w-4 h-4 text-red-600" />
                         </button>
-                        {onPacienteSelect && (
-                          <button
-                            onClick={() => onPacienteSelect(paciente)}
-                            className="p-2 hover:bg-gray-50 rounded-lg transition-colors"
-                          >
-                            <FileText className="w-4 h-4 text-gray-600" />
-                          </button>
-                        )}
+                        <button
+                          onClick={() =>
+                            router.push(`/pacientes/${paciente.id}/resumo/`)
+                          }
+                          className="p-2 hover:bg-gray-50 rounded-lg transition-colors"
+                        >
+                          <FileText className="w-4 h-4 text-gray-600" />
+                        </button>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -333,7 +337,7 @@ export default function PacientesPage({
 
       {/* Modal de Registro */}
       <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Registrar Paciente</DialogTitle>
             <DialogDescription>
@@ -370,7 +374,10 @@ export default function PacientesPage({
                 type="tel"
                 value={formData.telefone}
                 onChange={(e) =>
-                  setFormData({ ...formData, telefone: formatTelefone(e.target.value) })
+                  setFormData({
+                    ...formData,
+                    telefone: formatTelefone(e.target.value),
+                  })
                 }
                 placeholder="(99) 99999-9999"
               />
@@ -445,7 +452,6 @@ export default function PacientesPage({
                     telefone: formData.telefone.replace(/\D/g, ""),
                   });
 
-
                   await criarPaciente({
                     ...formData,
                     cpf: formData.cpf.replace(/\D/g, ""),
@@ -481,7 +487,7 @@ export default function PacientesPage({
 
       {/* Modal de Edição */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Editar Paciente</DialogTitle>
             <DialogDescription>Atualize os dados do paciente</DialogDescription>
@@ -509,7 +515,9 @@ export default function PacientesPage({
                 id="edit-telefone"
                 type="tel"
                 value={editTelefone}
-                onChange={(e) => setEditTelefone(formatTelefone(e.target.value))}
+                onChange={(e) =>
+                  setEditTelefone(formatTelefone(e.target.value))
+                }
                 placeholder="(99) 99999-9999"
               />
             </div>

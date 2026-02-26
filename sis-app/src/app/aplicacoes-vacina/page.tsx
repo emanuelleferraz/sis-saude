@@ -203,6 +203,14 @@ export default function RegistroVacinacaoPage({ onBack }: RegistroVacinacaoPageP
       }
     }
 
+        function formatDateOnly(dateString: string | undefined) {
+          if (!dateString) return "-";
+
+          const [year, month, day] = dateString.split("-");
+
+          return `${day}/${month}/${year}`;
+        }
+
   return (
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
@@ -311,7 +319,7 @@ export default function RegistroVacinacaoPage({ onBack }: RegistroVacinacaoPageP
                   <TableRow key={registro.id}>
                     <TableCell>{registro.nomePaciente}</TableCell>
                     <TableCell>{registro.nomeVacina}</TableCell>
-                    <TableCell>{registro.dataAplicacao}</TableCell>
+                    <TableCell>{formatDateOnly(registro.dataAplicacao)}</TableCell>
                     <TableCell>{registro.dose}</TableCell>
                     <TableCell>{registro.nomeEnfermeiro}</TableCell>
                     <TableCell>{registro.nomeUnidade}</TableCell>
@@ -347,7 +355,7 @@ export default function RegistroVacinacaoPage({ onBack }: RegistroVacinacaoPageP
 
       {/* Modal de Registro */}
       <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Registrar Vacinação</DialogTitle>
             <DialogDescription>
@@ -481,7 +489,7 @@ export default function RegistroVacinacaoPage({ onBack }: RegistroVacinacaoPageP
 
       {/* Modal de Edição */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Editar Registro de Vacinação</DialogTitle>
             <DialogDescription>

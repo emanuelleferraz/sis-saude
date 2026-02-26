@@ -279,67 +279,69 @@ export default function VisitasDomiciliaresPage({
             </div>
 
             {/* Tabela de visitas */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Paciente</TableHead>
-                  <TableHead>Agente</TableHead>
-                  <TableHead>Data</TableHead>
-                  <TableHead>Horário</TableHead>
-                  <TableHead>Observações</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredVisitas.map((visita) => {
-                  const dateObj = new Date(visita.dataVisita);
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Paciente</TableHead>
+                    <TableHead>Agente</TableHead>
+                    <TableHead>Data</TableHead>
+                    <TableHead>Horário</TableHead>
+                    <TableHead>Observações</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredVisitas.map((visita) => {
+                    const dateObj = new Date(visita.dataVisita);
 
-                  const dataFormatada = dateObj.toLocaleDateString("pt-BR", {
-                    timeZone: "America/Sao_Paulo",
-                  });
-                  const horarioFormatado = dateObj.toTimeString().slice(0, 5);
+                    const dataFormatada = dateObj.toLocaleDateString("pt-BR", {
+                      timeZone: "America/Sao_Paulo",
+                    });
+                    const horarioFormatado = dateObj.toTimeString().slice(0, 5);
 
-                  return (
-                    <TableRow key={visita.id}>
-                      <TableCell>{visita.nomePaciente}</TableCell>
-                      <TableCell>{visita.nomeAgente}</TableCell>
-                      <TableCell>{dataFormatada}</TableCell>
-                      <TableCell>{horarioFormatado}</TableCell>
-                      <TableCell>{visita.observacoes}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <button
-                            onClick={() => {
-                              setSelectedVisita(visita);
-                              setIsEditOpen(true);
-                            }}
-                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                          >
-                            <Pencil className="w-4 h-4 text-blue-600" />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedVisita(visita);
-                              setIsDeleteOpen(true);
-                            }}
-                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                    return (
+                      <TableRow key={visita.id}>
+                        <TableCell>{visita.nomePaciente}</TableCell>
+                        <TableCell>{visita.nomeAgente}</TableCell>
+                        <TableCell>{dataFormatada}</TableCell>
+                        <TableCell>{horarioFormatado}</TableCell>
+                        <TableCell>{visita.observacoes}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() => {
+                                setSelectedVisita(visita);
+                                setIsEditOpen(true);
+                              }}
+                              className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                            >
+                              <Pencil className="w-4 h-4 text-blue-600" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSelectedVisita(visita);
+                                setIsDeleteOpen(true);
+                              }}
+                              className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </main>
       </div>
 
       {/* Modal de Registro */}
       <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Registrar Visita Domiciliar</DialogTitle>
             <DialogDescription>
@@ -439,7 +441,7 @@ export default function VisitasDomiciliaresPage({
 
       {/* Modal de Edição */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Editar Visita Domiciliar</DialogTitle>
             <DialogDescription>Atualize os dados da visita</DialogDescription>

@@ -9,6 +9,7 @@ import br.edu.ufop.tcc.sis_api.model.dto.indicadores.AplicacaoVacinaResponseDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.indicadores.ConsultaResponseDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.indicadores.VisitaResponseDTO;
 import br.edu.ufop.tcc.sis_api.model.dto.paciente.PacienteResumoResponseDTO;
+import br.edu.ufop.tcc.sis_api.model.entity.EnderecoEntity;
 import br.edu.ufop.tcc.sis_api.model.entity.PacienteEntity;
 import br.edu.ufop.tcc.sis_api.repository.AplicacaoVacinaRepository;
 import br.edu.ufop.tcc.sis_api.repository.ConsultaRepository;
@@ -54,6 +55,7 @@ public class PacienteResumoService {
                         .nomePaciente(v.getPaciente().getNome())
                         .nomeVacina(v.getVacina().getNome())
                         .nomeEnfermeiro(v.getEnfermeiro().getNome())
+                        .nomeUnidade(v.getUnidade().getNome())
                         .build()
                 ).toList();
 
@@ -69,12 +71,18 @@ public class PacienteResumoService {
                         .build()
                 ).toList();
 
+        EnderecoEntity end = paciente.getEndereco();        
+        String enderecoFormatado = end.getRua() + ", "
+                + end.getNumero() + " - "
+                + end.getBairro().getNome();
+
         return PacienteResumoResponseDTO.builder()
                 .id(paciente.getId())
                 .nome(paciente.getNome())
                 .cpf(paciente.getCpf())
                 .dataNascimento(paciente.getDataNascimento())
                 .sexo(paciente.getSexo())
+                .enderecoFormatado(enderecoFormatado)
                 .telefone(paciente.getTelefone())
                 .consultas(consultas)
                 .vacinas(vacinas)

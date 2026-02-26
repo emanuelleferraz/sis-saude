@@ -317,7 +317,7 @@ export default function MedicosPage({ onBack }: MedicosPageProps) {
 
       {/* Modal de Registro */}
       <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Registrar Médico</DialogTitle>
             <DialogDescription>
@@ -387,7 +387,7 @@ export default function MedicosPage({ onBack }: MedicosPageProps) {
 
       {/* Modal de Edição */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Editar Médico</DialogTitle>
             <DialogDescription>Atualize os dados do médico</DialogDescription>

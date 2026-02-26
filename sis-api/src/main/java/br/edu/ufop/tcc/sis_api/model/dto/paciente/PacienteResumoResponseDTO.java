@@ -22,6 +22,7 @@ public class PacienteResumoResponseDTO {
     private LocalDate dataNascimento;
     private EnumSexoPaciente sexo;
     private String telefone;
+    private String enderecoFormatado;
 
     private List<ConsultaResponseDTO> consultas;
     private List<AplicacaoVacinaResponseDTO> vacinas;

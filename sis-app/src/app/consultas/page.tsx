@@ -309,7 +309,7 @@ export default function ConsultasPage({ onBack }: ConsultasPageProps) {
                   />
                 </div>
                 <Button
-                  onClick={() => setIsRegisterOpen(true)}
+                  onClick={() => {resetForm(); setIsRegisterOpen(true);}}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -319,67 +319,69 @@ export default function ConsultasPage({ onBack }: ConsultasPageProps) {
             </div>
 
             {/* Tabela de consultas */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Paciente</TableHead>
-                  <TableHead>Médico</TableHead>
-                  <TableHead>Data</TableHead>
-                  <TableHead>Horário</TableHead>
-                  <TableHead>Doença</TableHead>
-                  <TableHead>Unidade PSF</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredConsultas.map((consulta) => {
-                  const dateObj = new Date(consulta.dataConsulta);
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Paciente</TableHead>
+                    <TableHead>Médico</TableHead>
+                    <TableHead>Data</TableHead>
+                    <TableHead>Horário</TableHead>
+                    <TableHead>Doença</TableHead>
+                    <TableHead>Unidade PSF</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredConsultas.map((consulta) => {
+                    const dateObj = new Date(consulta.dataConsulta);
 
-                  const dataFormatada = dateObj.toLocaleDateString("pt-BR", {
-                    timeZone: "America/Sao_Paulo",
-                  });
-                  const horarioFormatado = dateObj.toTimeString().slice(0, 5);
-                  return (
-                    <TableRow key={consulta.id}>
-                      <TableCell>{consulta.pacienteNome}</TableCell>
-                      <TableCell>{consulta.medicoNome}</TableCell>
-                      <TableCell>{dataFormatada}</TableCell>
-                      <TableCell>{horarioFormatado}</TableCell>
-                      <TableCell>{consulta.doencaNome}</TableCell>
-                      <TableCell>{consulta.unidadeNome}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <button
-                            onClick={() => {
-                              setSelectedConsulta(consulta);
-                              setIsEditOpen(true);
-                            }}
-                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                          >
-                            <Pencil className="w-4 h-4 text-blue-600" />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedConsulta(consulta);
-                              setIsDeleteOpen(true);
-                            }}
-                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                    const dataFormatada = dateObj.toLocaleDateString("pt-BR", {
+                      timeZone: "America/Sao_Paulo",
+                    });
+                    const horarioFormatado = dateObj.toTimeString().slice(0, 5);
+                    return (
+                      <TableRow key={consulta.id}>
+                        <TableCell>{consulta.pacienteNome}</TableCell>
+                        <TableCell>{consulta.medicoNome}</TableCell>
+                        <TableCell>{dataFormatada}</TableCell>
+                        <TableCell>{horarioFormatado}</TableCell>
+                        <TableCell>{consulta.doencaNome}</TableCell>
+                        <TableCell>{consulta.unidadeNome}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() => {
+                                setSelectedConsulta(consulta);
+                                setIsEditOpen(true);
+                              }}
+                              className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                            >
+                              <Pencil className="w-4 h-4 text-blue-600" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSelectedConsulta(consulta);
+                                setIsDeleteOpen(true);
+                              }}
+                              className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </main>
       </div>
       {/* Modal de Registro */}
       <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Registrar Consulta</DialogTitle>
             <DialogDescription>
@@ -518,7 +520,7 @@ export default function ConsultasPage({ onBack }: ConsultasPageProps) {
       </Dialog>
       {/* Modal de Edição */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-125">
+        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Editar Consulta</DialogTitle>
             <DialogDescription>Atualize os dados da consulta</DialogDescription>
