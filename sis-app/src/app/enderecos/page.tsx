@@ -48,6 +48,7 @@ import {
 } from "@/components/ui/select";
 import { Bairro } from "@/types/bairro";
 import { listarBairros } from "@/services/bairroService";
+import AuthGuard from "@/components/AuthGuard";
 
 interface EnderecosPageProps {
   onBack: () => void;
@@ -207,330 +208,337 @@ export default function EnderecosPage({ onBack }: EnderecosPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-blue-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              {menuOpen ? (
-                <X className="w-6 h-6 text-gray-700" />
-              ) : (
-                <Menu className="w-6 h-6 text-gray-700" />
-              )}
-            </button>
+    <AuthGuard>
+      <div className="min-h-screen bg-blue-50">
+        {/* Header */}
+        <header className="bg-white shadow-sm">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                {menuOpen ? (
+                  <X className="w-6 h-6 text-gray-700" />
+                ) : (
+                  <Menu className="w-6 h-6 text-gray-700" />
+                )}
+              </button>
               {/* Logo */}
               <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Pesquisar..."
-                className="pl-10 pr-4 py-2 w-80 rounded-lg"
-              />
             </div>
-            <div className="bg-gray-200 p-2 rounded-full cursor-pointer hover:bg-gray-300 transition-colors">
-              <User className="w-6 h-6 text-gray-700" />
-            </div>
-          </div>
-        </div>
-      </header>
 
-      <div className="flex">
-        {/* Menu lateral */}
-        {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
-
-        {/* Conteúdo principal */}
-        <main className="flex-1 p-8">
-          {/* Botão Página Inicial */}
-          <Button
-            onClick={() => router.push("/home")}
-            variant="ghost"
-            className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-          >
-            <Home className="w-4 h-4 mr-2" />
-            Página Inicial
-          </Button>
-
-          <div className="bg-white rounded-2xl shadow-sm p-8">
-            {/* Cabeçalho da página */}
-            <div className="mb-6">
-              <h1 className="text-3xl text-gray-800 mb-6">Endereços</h1>
-
-              <div className="flex items-center gap-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder="Pesquisar endereços..."
-                    className="pl-10 pr-4 py-2 w-full rounded-lg"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <Button
-                  onClick={() => setIsRegisterOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Adicionar Endereço
-                </Button>
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Pesquisar..."
+                  className="pl-10 pr-4 py-2 w-80 rounded-lg"
+                />
+              </div>
+              <div className="bg-gray-200 p-2 rounded-full cursor-pointer hover:bg-gray-300 transition-colors">
+                <User className="w-6 h-6 text-gray-700" />
               </div>
             </div>
+          </div>
+        </header>
 
-            {/* Tabela de endereços */}
-            <div className="overflow-x-auto max-h-125 overflow-y-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Rua</TableHead>
-                    <TableHead>Número</TableHead>
-                    <TableHead>CEP</TableHead>
-                    <TableHead>Cidade</TableHead>
-                    <TableHead>Bairro</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredEnderecos.map((endereco) => (
-                    <TableRow key={endereco.id}>
-                      <TableCell>{endereco.rua}</TableCell>
-                      <TableCell>{endereco.numero}</TableCell>
-                      <TableCell>{endereco.cep}</TableCell>
-                      <TableCell>{endereco.cidade}</TableCell>
-                      <TableCell>{endereco.bairroNome}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <button
-                            onClick={() => {
-                              setSelectedEndereco(endereco);
-                              setIsEditOpen(true);
-                            }}
-                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                          >
-                            <Pencil className="w-4 h-4 text-blue-600" />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedEndereco(endereco);
-                              setIsDeleteOpen(true);
-                            }}
-                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </button>
-                        </div>
-                      </TableCell>
+        <div className="flex">
+          {/* Menu lateral */}
+          {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
+
+          {/* Conteúdo principal */}
+          <main className="flex-1 p-8">
+            {/* Botão Página Inicial */}
+            <Button
+              onClick={() => router.push("/home")}
+              variant="ghost"
+              className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+            >
+              <Home className="w-4 h-4 mr-2" />
+              Página Inicial
+            </Button>
+
+            <div className="bg-white rounded-2xl shadow-sm p-8">
+              {/* Cabeçalho da página */}
+              <div className="mb-6">
+                <h1 className="text-3xl text-gray-800 mb-6">Endereços</h1>
+
+                <div className="flex items-center gap-4">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Input
+                      type="text"
+                      placeholder="Pesquisar endereços..."
+                      className="pl-10 pr-4 py-2 w-full rounded-lg"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <Button
+                    onClick={() => setIsRegisterOpen(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Adicionar Endereço
+                  </Button>
+                </div>
+              </div>
+
+              {/* Tabela de endereços */}
+              <div className="overflow-x-auto max-h-125 overflow-y-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Rua</TableHead>
+                      <TableHead>Número</TableHead>
+                      <TableHead>CEP</TableHead>
+                      <TableHead>Cidade</TableHead>
+                      <TableHead>Bairro</TableHead>
+                      <TableHead className="text-right">Ações</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredEnderecos.map((endereco) => (
+                      <TableRow key={endereco.id}>
+                        <TableCell>{endereco.rua}</TableCell>
+                        <TableCell>{endereco.numero}</TableCell>
+                        <TableCell>{endereco.cep}</TableCell>
+                        <TableCell>{endereco.cidade}</TableCell>
+                        <TableCell>{endereco.bairroNome}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() => {
+                                setSelectedEndereco(endereco);
+                                setIsEditOpen(true);
+                              }}
+                              className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                            >
+                              <Pencil className="w-4 h-4 text-blue-600" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSelectedEndereco(endereco);
+                                setIsDeleteOpen(true);
+                              }}
+                              className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
+        </div>
+
+        {/* Modal de Registro */}
+        <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
+          <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
+            <DialogHeader>
+              <DialogTitle>Adicionar Endereço</DialogTitle>
+              <DialogDescription>
+                Preencha os dados do novo endereço
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="rua">Logradouro</Label>
+                <Input
+                  id="rua"
+                  placeholder="Digite o nome da rua"
+                  value={rua}
+                  onChange={(e) => setRua(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="numero">Número</Label>
+                <Input
+                  id="numero"
+                  placeholder="Digite o número"
+                  value={numero}
+                  onChange={(e) => setNumero(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="cep">CEP</Label>
+                <Input
+                  id="cep"
+                  placeholder="00000-000"
+                  value={cep}
+                  onChange={(e) => setCep(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="cidade">Cidade</Label>
+                <Input
+                  id="cidade"
+                  placeholder="Digite a cidade"
+                  value={cidade}
+                  onChange={(e) => setCidade(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="bairro">Bairro</Label>
+                <Select
+                  value={idBairro?.toString() || ""}
+                  onValueChange={(value) => setidBairro(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o bairro" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-60 overflow-y-auto">
+                    {bairros.map((bairro) => (
+                      <SelectItem key={bairro.id} value={bairro.id.toString()}>
+                        {bairro.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="complemento">Complemento</Label>
+                <Input
+                  id="complemento"
+                  placeholder="Digite o complemento"
+                  value={complemento}
+                  onChange={(e) => setComplemento(e.target.value)}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsRegisterOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={handleCreateEndereco}
+              >
+                Salvar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Modal de Edição */}
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
+            <DialogHeader>
+              <DialogTitle>Editar Endereço</DialogTitle>
+              <DialogDescription>
+                Atualize os dados do endereço
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="edit-rua">Logradouro</Label>
+                <Input
+                  id="edit-rua"
+                  value={rua}
+                  onChange={(e) => setRua(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-numero">Número</Label>
+                <Input
+                  id="edit-numero"
+                  placeholder="Digite o número"
+                  value={numero}
+                  onChange={(e) => setNumero(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-cep">CEP</Label>
+                <Input
+                  id="edit-cep"
+                  value={cep}
+                  onChange={(e) => setCep(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-cidade">Cidade</Label>
+                <Input
+                  id="edit-cidade"
+                  value={cidade}
+                  onChange={(e) => setCidade(e.target.value)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-bairro">Bairro</Label>
+                <Select
+                  value={idBairro?.toString() || ""}
+                  onValueChange={(value) => setidBairro(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o bairro" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-60 overflow-y-auto">
+                    {bairros.map((bairro) => (
+                      <SelectItem key={bairro.id} value={bairro.id.toString()}>
+                        {bairro.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="complemento">Complemento</Label>
+                <Input
+                  id="complemento"
+                  placeholder="Digite o complemento"
+                  value={complemento}
+                  onChange={(e) => setComplemento(e.target.value)}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsEditOpen(false)}>
+                Cancelar
+              </Button>
+              <Button
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={handleUpdateEndereco}
+              >
+                Atualizar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Modal de Exclusão */}
+        <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+          <DialogContent className="sm:max-w-100">
+            <DialogHeader>
+              <DialogTitle>Confirmar Exclusão</DialogTitle>
+              <DialogDescription>
+                Tem certeza que deseja excluir o endereço{" "}
+                <strong>{selectedEndereco?.rua}</strong>? Esta ação não pode ser
+                desfeita.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
+                Cancelar
+              </Button>
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={handleDeleteEndereco}
+              >
+                Excluir
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
-
-      {/* Modal de Registro */}
-      <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle>Adicionar Endereço</DialogTitle>
-            <DialogDescription>
-              Preencha os dados do novo endereço
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="rua">Rua</Label>
-              <Input
-                id="rua"
-                placeholder="Digite o nome da rua"
-                value={rua}
-                onChange={(e) => setRua(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="numero">Número</Label>
-              <Input
-                id="numero"
-                placeholder="Digite o número"
-                value={numero}
-                onChange={(e) => setNumero(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="cep">CEP</Label>
-              <Input
-                id="cep"
-                placeholder="00000-000"
-                value={cep}
-                onChange={(e) => setCep(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="cidade">Cidade</Label>
-              <Input
-                id="cidade"
-                placeholder="Digite a cidade"
-                value={cidade}
-                onChange={(e) => setCidade(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="bairro">Bairro</Label>
-              <Select
-                value={idBairro?.toString() || ""}
-                onValueChange={(value) => setidBairro(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o bairro" />
-                </SelectTrigger>
-                <SelectContent className="max-h-60 overflow-y-auto">
-                  {bairros.map((bairro) => (
-                    <SelectItem key={bairro.id} value={bairro.id.toString()}>
-                      {bairro.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="complemento">Complemento</Label>
-              <Input
-                id="complemento"
-                placeholder="Digite o complemento"
-                value={complemento}
-                onChange={(e) => setComplemento(e.target.value)}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsRegisterOpen(false)}>
-              Cancelar
-            </Button>
-            <Button
-              className="bg-blue-600 hover:bg-blue-700"
-              onClick={handleCreateEndereco}
-            >
-              Salvar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal de Edição */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle>Editar Endereço</DialogTitle>
-            <DialogDescription>Atualize os dados do endereço</DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="edit-rua">Rua</Label>
-              <Input
-                id="edit-rua"
-                value={rua}
-                onChange={(e) => setRua(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-numero">Número</Label>
-              <Input
-                id="edit-numero"
-                placeholder="Digite o número"
-                value={numero}
-                onChange={(e) => setNumero(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-cep">CEP</Label>
-              <Input
-                id="edit-cep"
-                value={cep}
-                onChange={(e) => setCep(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-cidade">Cidade</Label>
-              <Input
-                id="edit-cidade"
-                value={cidade}
-                onChange={(e) => setCidade(e.target.value)}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-bairro">Bairro</Label>
-              <Select
-                value={idBairro?.toString() || ""}
-                onValueChange={(value) => setidBairro(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o bairro" />
-                </SelectTrigger>
-                <SelectContent className="max-h-60 overflow-y-auto">
-                  {bairros.map((bairro) => (
-                    <SelectItem key={bairro.id} value={bairro.id.toString()}>
-                      {bairro.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="complemento">Complemento</Label>
-              <Input
-                id="complemento"
-                placeholder="Digite o complemento"
-                value={complemento}
-                onChange={(e) => setComplemento(e.target.value)}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditOpen(false)}>
-              Cancelar
-            </Button>
-            <Button
-              className="bg-blue-600 hover:bg-blue-700"
-              onClick={handleUpdateEndereco}
-            >
-              Atualizar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal de Exclusão */}
-      <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="sm:max-w-100">
-          <DialogHeader>
-            <DialogTitle>Confirmar Exclusão</DialogTitle>
-            <DialogDescription>
-              Tem certeza que deseja excluir o endereço{" "}
-              <strong>{selectedEndereco?.rua}</strong>? Esta ação não pode ser
-              desfeita.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
-              Cancelar
-            </Button>
-            <Button
-              className="bg-red-600 hover:bg-red-700 text-white"
-              onClick={handleDeleteEndereco}
-            >
-              Excluir
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+    </AuthGuard>
   );
 }

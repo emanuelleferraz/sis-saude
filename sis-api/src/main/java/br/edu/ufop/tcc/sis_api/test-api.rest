@@ -308,12 +308,13 @@ DELETE http://localhost:8080/perfis/3
 
 ### Criar Usuário
 POST http://localhost:8080/usuarios
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmxhbmRvb2xpbWFAZ21haWwuY29tIiwicm9sZSI6Ikdlc3RvciIsImlhdCI6MTc3MjIxOTcxMSwiZXhwIjoxNzcyMzA2MTExfQ.kIF9qT8PH3MhiBvwj9tGwfrEfpc_i93SoCWX1UloGts
 Content-Type: application/json
 
 {
-  "nome": "Usuário Teste",
-  "email": "teste@teste.com",
-  "senha": "teste4444",
+  "nome": "Emanuelle Ferraz Lima",
+  "email": "emanuelle.ferraz@aluno.ufop.edu.br",
+  "senha": "adminvitalis2026",
   "perfilId": 1
 }
 
@@ -342,7 +343,8 @@ Content-Type: application/json
 ###
 
 ### Deletar Usuário
-DELETE http://localhost:8080/usuarios/4
+DELETE http://localhost:8080/usuarios/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcmxhbmRvb2xpbWFAZ21haWwuY29tIiwicm9sZSI6Ikdlc3RvciIsImlhdCI6MTc3MjIxOTMzNywiZXhwIjoxNzcyMzA1NzM3fQ.Q9te7u_TpkTv01u6xoA1QytiWiIayLKw2GEpSRY03wY
 
 ############################################################################################################
 
@@ -556,3 +558,12 @@ GET http://localhost:8080/dashboard/cronicas
 ### Dashboard Doenças Transmissíveis
 GET http://localhost:8080/dashboard/epidemiologicas
 ###
+###############################################################################################################
+### Login
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "arlandoolima@gmail.com",
+  "senha": "vitalis-gestao2026"
+}

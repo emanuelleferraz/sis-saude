@@ -52,6 +52,8 @@ import {
 } from "@/services/usuarioService";
 import { listarPerfis } from "@/services/perfilService";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import AuthGuard from "@/components/AuthGuard";
 
 interface UsuariosPageProps {
   onBack: () => void;
@@ -183,6 +185,7 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
   }
 
   return (
+    <AuthGuard allowedRoles={["Administrador", "Gestor"]}>
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
@@ -466,5 +469,6 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
         </DialogContent>
       </Dialog>
     </div>
+    </AuthGuard>
   );
 }

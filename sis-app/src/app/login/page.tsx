@@ -1,22 +1,60 @@
-'use client';
-import { Activity } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { useState } from 'react';
+"use client";
+import { Activity } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
 import Image from "next/image";
+import { api } from "@/services/api";
+import { useRouter } from "next/navigation";
 
 interface LoginPageProps {
   onLogin: () => void;
 }
 
 export default function LoginPage({ onLogin }: LoginPageProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onLogin();
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await api.post("/auth/login", {
+        email,
+        senha: password,
+      });
+
+      const { token, usuario } = res.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("usuario", JSON.stringify(usuario));
+
+      router.push("/home");
+    } catch (err: any) {
+      if (err.response) {
+        const msg = err.response.data?.message || err.response.data?.erro;
+
+        if (msg?.includes("Usuário não encontrado")) {
+          setError("Email inválido ou usuário não encontrado");
+        } else if (msg?.includes("Senha incorreta")) {
+          setError("Senha inválida");
+        } else {
+          setError("Email ou senha inválidos");
+        }
+      } else {
+        setError("Erro ao conectar com o servidor");
+      }
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,15 +75,15 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         <div className="w-full max-w-md space-y-8">
           {/* Logo e Nome */}
           <div className="flex items-center justify-center gap-3">
-              {/* Logo */}
-              <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
+            {/* Logo */}
+            <img src="/logo.png" alt="Logo Vitalis" className="h-16 w-auto" />
           </div>
 
           {/* Bem-vindo */}
           <div className="text-center">
             <h1 className="text-3xl text-gray-800 mb-2">Bem-vindo</h1>
             <p className="text-gray-600">
-              Faça login no sistema com sua conta Sistema de Saúde
+              Faça login no sistema com sua conta Vitalis
             </p>
           </div>
 
@@ -92,7 +130,11 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
               </button>
               <div className="flex-1 border-t border-gray-300"></div>
             </div>
-
+            {error && (
+              <div className="text-red-600 font-medium text-center">
+                {error}
+              </div>
+            )}
             {/* Botão Entrar */}
             <Button
               type="submit"

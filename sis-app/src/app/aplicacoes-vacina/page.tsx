@@ -54,6 +54,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import AuthGuard from "@/components/AuthGuard";
 
 interface RegistroVacinacaoPageProps {
   onBack: () => void;
@@ -244,436 +245,447 @@ export default function RegistroVacinacaoPage({
   }
 
   return (
-    <div className="min-h-screen bg-blue-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="flex items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              {menuOpen ? (
-                <X className="w-6 h-6 text-gray-700" />
-              ) : (
-                <Menu className="w-6 h-6 text-gray-700" />
-              )}
-            </button>
+    <AuthGuard>
+      <div className="min-h-screen bg-blue-50">
+        {/* Header */}
+        <header className="bg-white shadow-sm">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                {menuOpen ? (
+                  <X className="w-6 h-6 text-gray-700" />
+                ) : (
+                  <Menu className="w-6 h-6 text-gray-700" />
+                )}
+              </button>
               {/* Logo */}
               <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <Input
-                type="text"
-                placeholder="Pesquisar..."
-                className="pl-10 pr-4 py-2 w-80 rounded-lg"
-              />
             </div>
-            <div className="bg-gray-200 p-2 rounded-full cursor-pointer hover:bg-gray-300 transition-colors">
-              <User className="w-6 h-6 text-gray-700" />
+
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Pesquisar..."
+                  className="pl-10 pr-4 py-2 w-80 rounded-lg"
+                />
+              </div>
+              <div className="bg-gray-200 p-2 rounded-full cursor-pointer hover:bg-gray-300 transition-colors">
+                <User className="w-6 h-6 text-gray-700" />
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <div className="flex">
-        {/* Menu lateral */}
-        {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
+        <div className="flex">
+          {/* Menu lateral */}
+          {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
 
-        {/* Conteúdo principal */}
-        <main className="flex-1 p-8">
-          {/* Botão Página Inicial */}
-          <Button
-            onClick={() => router.push("/home")}
-            variant="ghost"
-            className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-          >
-            <Home className="w-4 h-4 mr-2" />
-            Página Inicial
-          </Button>
+          {/* Conteúdo principal */}
+          <main className="flex-1 p-8">
+            {/* Botão Página Inicial */}
+            <Button
+              onClick={() => router.push("/home")}
+              variant="ghost"
+              className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+            >
+              <Home className="w-4 h-4 mr-2" />
+              Página Inicial
+            </Button>
 
-          <div className="bg-white rounded-2xl shadow-sm p-8">
-            {/* Cabeçalho da página */}
-            <div className="mb-6">
-              <h1 className="text-3xl text-gray-800 mb-6">
-                Registro de Vacinação
-              </h1>
+            <div className="bg-white rounded-2xl shadow-sm p-8">
+              {/* Cabeçalho da página */}
+              <div className="mb-6">
+                <h1 className="text-3xl text-gray-800 mb-6">
+                  Registro de Vacinação
+                </h1>
 
-              <div className="flex items-center gap-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder="Pesquisar registros de vacinação..."
-                    className="pl-10 pr-4 py-2 w-full rounded-lg"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
+                <div className="flex items-center gap-4">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Input
+                      type="text"
+                      placeholder="Pesquisar registros de vacinação..."
+                      className="pl-10 pr-4 py-2 w-full rounded-lg"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <Button
+                    onClick={() => {
+                      resetForm();
+                      setIsRegisterOpen(true);
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Registrar Vacinação
+                  </Button>
                 </div>
-                <Button
-                  onClick={() => {
-                    resetForm();
-                    setIsRegisterOpen(true);
-                  }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+              </div>
+
+              {/* Tabela de registros */}
+              <div className="overflow-x-auto max-h-125 overflow-y-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Nome do Paciente</TableHead>
+                      <TableHead>Nome da Vacina</TableHead>
+                      <TableHead>Data da Aplicação</TableHead>
+                      <TableHead>Dose</TableHead>
+                      <TableHead>Enfermeiro</TableHead>
+                      <TableHead>Unidade PSF</TableHead>
+                      <TableHead className="text-right">Ações</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredRegistros.map((registro) => (
+                      <TableRow key={registro.id}>
+                        <TableCell>{registro.nomePaciente}</TableCell>
+                        <TableCell>{registro.nomeVacina}</TableCell>
+                        <TableCell>
+                          {formatDateOnly(registro.dataAplicacao)}
+                        </TableCell>
+                        <TableCell>{registro.dose}</TableCell>
+                        <TableCell>{registro.nomeEnfermeiro}</TableCell>
+                        <TableCell>{registro.nomeUnidade}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <button
+                              onClick={() => {
+                                setSelectedRegistro(registro);
+                                setIsEditOpen(true);
+                              }}
+                              className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                            >
+                              <Pencil className="w-4 h-4 text-blue-600" />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSelectedRegistro(registro);
+                                setIsDeleteOpen(true);
+                              }}
+                              className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          </main>
+        </div>
+
+        {/* Modal de Registro */}
+        <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
+          <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
+            <DialogHeader>
+              <DialogTitle>Registrar Vacinação</DialogTitle>
+              <DialogDescription>
+                Preencha os dados da vacinação do paciente
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid gap-4 py-4">
+              {/* Select Paciente */}
+              <div className="grid gap-2">
+                <Label>Paciente</Label>
+                <Select
+                  value={pacienteId?.toString() || ""}
+                  onValueChange={(value) => setPacienteId(Number(value))}
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Registrar Vacinação
-                </Button>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o paciente" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {pacientes.map((paciente) => (
+                      <SelectItem
+                        key={paciente.id}
+                        value={paciente.id.toString()}
+                      >
+                        {paciente.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Select Vacina */}
+              <div className="grid gap-2">
+                <Label>Vacina</Label>
+                <Select
+                  value={vacinaId?.toString() || ""}
+                  onValueChange={(value) => setVacinaId(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a vacina" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {vacinas.map((vacina) => (
+                      <SelectItem key={vacina.id} value={vacina.id.toString()}>
+                        {vacina.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Input Data da Aplicação */}
+              <div className="grid gap-2">
+                <Label htmlFor="dataAplicacao">Data da Aplicação</Label>
+                <Input
+                  id="dataAplicacao"
+                  type="date"
+                  value={data}
+                  onChange={(e) => setData(e.target.value)}
+                />
+              </div>
+
+              {/* Input Dose */}
+              <div className="grid gap-2">
+                <Label htmlFor="dose">Dose</Label>
+                <Input
+                  id="dose"
+                  placeholder="Ex: 1ª Dose, 2ª Dose, Reforço"
+                  value={dose}
+                  onChange={(e) => setDose(e.target.value)}
+                />
+              </div>
+
+              {/* Select Enfermeiro */}
+              <div className="grid gap-2">
+                <Label>Enfermeiro/Técnico</Label>
+                <Select
+                  value={enfermeiroId?.toString() || ""}
+                  onValueChange={(value) => setEnfermeiroId(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o enfermeiro" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {enfermeiros.map((enfermeiro) => (
+                      <SelectItem
+                        key={enfermeiro.id}
+                        value={enfermeiro.id.toString()}
+                      >
+                        {enfermeiro.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Select Unidade */}
+              <div className="grid gap-2">
+                <Label>Unidade PSF</Label>
+                <Select
+                  value={unidadeId?.toString() || ""}
+                  onValueChange={(value) => setUnidadeId(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a unidade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {unidades.map((unidade) => (
+                      <SelectItem
+                        key={unidade.id}
+                        value={unidade.id.toString()}
+                      >
+                        {unidade.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
-            {/* Tabela de registros */}
-            <div className="overflow-x-auto max-h-125 overflow-y-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome do Paciente</TableHead>
-                    <TableHead>Nome da Vacina</TableHead>
-                    <TableHead>Data da Aplicação</TableHead>
-                    <TableHead>Dose</TableHead>
-                    <TableHead>Enfermeiro</TableHead>
-                    <TableHead>Unidade PSF</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredRegistros.map((registro) => (
-                    <TableRow key={registro.id}>
-                      <TableCell>{registro.nomePaciente}</TableCell>
-                      <TableCell>{registro.nomeVacina}</TableCell>
-                      <TableCell>
-                        {formatDateOnly(registro.dataAplicacao)}
-                      </TableCell>
-                      <TableCell>{registro.dose}</TableCell>
-                      <TableCell>{registro.nomeEnfermeiro}</TableCell>
-                      <TableCell>{registro.nomeUnidade}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <button
-                            onClick={() => {
-                              setSelectedRegistro(registro);
-                              setIsEditOpen(true);
-                            }}
-                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                          >
-                            <Pencil className="w-4 h-4 text-blue-600" />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setSelectedRegistro(registro);
-                              setIsDeleteOpen(true);
-                            }}
-                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsRegisterOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={handleCreate}
+              >
+                Salvar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Modal de Edição */}
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
+            <DialogHeader>
+              <DialogTitle>Editar Registro de Vacinação</DialogTitle>
+              <DialogDescription>
+                Atualize os dados da vacinação
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="grid gap-4 py-4">
+              {/* Select Paciente */}
+              <div className="grid gap-2">
+                <Label>Paciente</Label>
+                <Select
+                  value={pacienteId?.toString() || ""}
+                  onValueChange={(value) => setPacienteId(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o paciente" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {pacientes.map((paciente) => (
+                      <SelectItem
+                        key={paciente.id}
+                        value={paciente.id.toString()}
+                      >
+                        {paciente.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Select Vacina */}
+              <div className="grid gap-2">
+                <Label>Vacina</Label>
+                <Select
+                  value={vacinaId?.toString() || ""}
+                  onValueChange={(value) => setVacinaId(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a vacina" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {vacinas.map((vacina) => (
+                      <SelectItem key={vacina.id} value={vacina.id.toString()}>
+                        {vacina.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Input Data da Aplicação */}
+              <div className="grid gap-2">
+                <Label htmlFor="edit-dataAplicacao">Data da Aplicação</Label>
+                <Input
+                  id="edit-dataAplicacao"
+                  type="date"
+                  value={data}
+                  onChange={(e) => setData(e.target.value)}
+                />
+              </div>
+
+              {/* Input Dose */}
+              <div className="grid gap-2">
+                <Label htmlFor="edit-dose">Dose</Label>
+                <Input
+                  id="edit-dose"
+                  placeholder="Ex: 1ª Dose, 2ª Dose, Reforço"
+                  value={dose}
+                  onChange={(e) => setDose(e.target.value)}
+                />
+              </div>
+
+              {/* Select Enfermeiro */}
+              <div className="grid gap-2">
+                <Label>Enfermeiro/Técnico</Label>
+                <Select
+                  value={enfermeiroId?.toString() || ""}
+                  onValueChange={(value) => setEnfermeiroId(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o enfermeiro" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {enfermeiros.map((enfermeiro) => (
+                      <SelectItem
+                        key={enfermeiro.id}
+                        value={enfermeiro.id.toString()}
+                      >
+                        {enfermeiro.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Select Unidade */}
+              <div className="grid gap-2">
+                <Label>Unidade PSF</Label>
+                <Select
+                  value={unidadeId?.toString() || ""}
+                  onValueChange={(value) => setUnidadeId(Number(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a unidade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {unidades.map((unidade) => (
+                      <SelectItem
+                        key={unidade.id}
+                        value={unidade.id.toString()}
+                      >
+                        {unidade.nome}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-          </div>
-        </main>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsEditOpen(false)}>
+                Cancelar
+              </Button>
+              <Button
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={handleUpdate}
+              >
+                Atualizar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Modal de Exclusão */}
+        <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+          <DialogContent className="sm:max-w-100">
+            <DialogHeader>
+              <DialogTitle>Confirmar Exclusão</DialogTitle>
+              <DialogDescription>
+                Tem certeza que deseja excluir o registro de vacinação de{" "}
+                <strong>{selectedRegistro?.nomePaciente}</strong>? Esta ação não
+                pode ser desfeita.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
+                Cancelar
+              </Button>
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={handleDelete}
+              >
+                Excluir
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
-
-      {/* Modal de Registro */}
-      <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle>Registrar Vacinação</DialogTitle>
-            <DialogDescription>
-              Preencha os dados da vacinação do paciente
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="grid gap-4 py-4">
-            {/* Select Paciente */}
-            <div className="grid gap-2">
-              <Label>Paciente</Label>
-              <Select
-                value={pacienteId?.toString() || ""}
-                onValueChange={(value) => setPacienteId(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o paciente" />
-                </SelectTrigger>
-                <SelectContent>
-                  {pacientes.map((paciente) => (
-                    <SelectItem
-                      key={paciente.id}
-                      value={paciente.id.toString()}
-                    >
-                      {paciente.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Select Vacina */}
-            <div className="grid gap-2">
-              <Label>Vacina</Label>
-              <Select
-                value={vacinaId?.toString() || ""}
-                onValueChange={(value) => setVacinaId(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a vacina" />
-                </SelectTrigger>
-                <SelectContent>
-                  {vacinas.map((vacina) => (
-                    <SelectItem key={vacina.id} value={vacina.id.toString()}>
-                      {vacina.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Input Data da Aplicação */}
-            <div className="grid gap-2">
-              <Label htmlFor="dataAplicacao">Data da Aplicação</Label>
-              <Input
-                id="dataAplicacao"
-                type="date"
-                value={data}
-                onChange={(e) => setData(e.target.value)}
-              />
-            </div>
-
-            {/* Input Dose */}
-            <div className="grid gap-2">
-              <Label htmlFor="dose">Dose</Label>
-              <Input
-                id="dose"
-                placeholder="Ex: 1ª Dose, 2ª Dose, Reforço"
-                value={dose}
-                onChange={(e) => setDose(e.target.value)}
-              />
-            </div>
-
-            {/* Select Enfermeiro */}
-            <div className="grid gap-2">
-              <Label>Enfermeiro/Técnico</Label>
-              <Select
-                value={enfermeiroId?.toString() || ""}
-                onValueChange={(value) => setEnfermeiroId(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o enfermeiro" />
-                </SelectTrigger>
-                <SelectContent>
-                  {enfermeiros.map((enfermeiro) => (
-                    <SelectItem
-                      key={enfermeiro.id}
-                      value={enfermeiro.id.toString()}
-                    >
-                      {enfermeiro.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Select Unidade */}
-            <div className="grid gap-2">
-              <Label>Unidade PSF</Label>
-              <Select
-                value={unidadeId?.toString() || ""}
-                onValueChange={(value) => setUnidadeId(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a unidade" />
-                </SelectTrigger>
-                <SelectContent>
-                  {unidades.map((unidade) => (
-                    <SelectItem key={unidade.id} value={unidade.id.toString()}>
-                      {unidade.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsRegisterOpen(false)}>
-              Cancelar
-            </Button>
-            <Button
-              className="bg-blue-600 hover:bg-blue-700"
-              onClick={handleCreate}
-            >
-              Salvar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal de Edição */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle>Editar Registro de Vacinação</DialogTitle>
-            <DialogDescription>
-              Atualize os dados da vacinação
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="grid gap-4 py-4">
-            {/* Select Paciente */}
-            <div className="grid gap-2">
-              <Label>Paciente</Label>
-              <Select
-                value={pacienteId?.toString() || ""}
-                onValueChange={(value) => setPacienteId(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o paciente" />
-                </SelectTrigger>
-                <SelectContent>
-                  {pacientes.map((paciente) => (
-                    <SelectItem
-                      key={paciente.id}
-                      value={paciente.id.toString()}
-                    >
-                      {paciente.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Select Vacina */}
-            <div className="grid gap-2">
-              <Label>Vacina</Label>
-              <Select
-                value={vacinaId?.toString() || ""}
-                onValueChange={(value) => setVacinaId(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a vacina" />
-                </SelectTrigger>
-                <SelectContent>
-                  {vacinas.map((vacina) => (
-                    <SelectItem key={vacina.id} value={vacina.id.toString()}>
-                      {vacina.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Input Data da Aplicação */}
-            <div className="grid gap-2">
-              <Label htmlFor="edit-dataAplicacao">Data da Aplicação</Label>
-              <Input
-                id="edit-dataAplicacao"
-                type="date"
-                value={data}
-                onChange={(e) => setData(e.target.value)}
-              />
-            </div>
-
-            {/* Input Dose */}
-            <div className="grid gap-2">
-              <Label htmlFor="edit-dose">Dose</Label>
-              <Input
-                id="edit-dose"
-                placeholder="Ex: 1ª Dose, 2ª Dose, Reforço"
-                value={dose}
-                onChange={(e) => setDose(e.target.value)}
-              />
-            </div>
-
-            {/* Select Enfermeiro */}
-            <div className="grid gap-2">
-              <Label>Enfermeiro/Técnico</Label>
-              <Select
-                value={enfermeiroId?.toString() || ""}
-                onValueChange={(value) => setEnfermeiroId(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione o enfermeiro" />
-                </SelectTrigger>
-                <SelectContent>
-                  {enfermeiros.map((enfermeiro) => (
-                    <SelectItem
-                      key={enfermeiro.id}
-                      value={enfermeiro.id.toString()}
-                    >
-                      {enfermeiro.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Select Unidade */}
-            <div className="grid gap-2">
-              <Label>Unidade PSF</Label>
-              <Select
-                value={unidadeId?.toString() || ""}
-                onValueChange={(value) => setUnidadeId(Number(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a unidade" />
-                </SelectTrigger>
-                <SelectContent>
-                  {unidades.map((unidade) => (
-                    <SelectItem key={unidade.id} value={unidade.id.toString()}>
-                      {unidade.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditOpen(false)}>
-              Cancelar
-            </Button>
-            <Button
-              className="bg-blue-600 hover:bg-blue-700"
-              onClick={handleUpdate}
-            >
-              Atualizar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal de Exclusão */}
-      <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="sm:max-w-100">
-          <DialogHeader>
-            <DialogTitle>Confirmar Exclusão</DialogTitle>
-            <DialogDescription>
-              Tem certeza que deseja excluir o registro de vacinação de{" "}
-              <strong>{selectedRegistro?.nomePaciente}</strong>? Esta ação não
-              pode ser desfeita.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
-              Cancelar
-            </Button>
-            <Button
-              className="bg-red-600 hover:bg-red-700 text-white"
-              onClick={handleDelete}
-            >
-              Excluir
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+    </AuthGuard>
   );
 }

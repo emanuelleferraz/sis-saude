@@ -50,6 +50,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import AuthGuard from "@/components/AuthGuard";
 
 interface DoencasPageProps {
   onBack: () => void;
@@ -171,6 +172,7 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
   }
 
   return (
+    <AuthGuard>
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
@@ -436,5 +438,6 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
         </DialogContent>
       </Dialog>
     </div>
+    </AuthGuard>
   );
 }

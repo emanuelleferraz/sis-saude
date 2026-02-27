@@ -25,7 +25,7 @@ public class AuthService {
             throw new RuntimeException("Senha inválida");
         }
 
-        String token = jwtService.generateToken(usuario.getEmail());
+        String token = jwtService.generateToken(usuario);
 
         return LoginResponseDTO.builder()
                 .token(token)

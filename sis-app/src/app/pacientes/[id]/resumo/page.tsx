@@ -26,6 +26,7 @@ import { PacienteResumoDTO } from "@/types/pacienteResumo";
 import { getPacienteResumo } from "@/services/pacienteResumoService";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import AuthGuard from "@/components/AuthGuard";
 
 
 export default function ResumoPacientePage() {
@@ -94,6 +95,7 @@ export default function ResumoPacientePage() {
     }
 
   return (
+    <AuthGuard>
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
@@ -341,5 +343,6 @@ export default function ResumoPacientePage() {
         </main>
       </div>
     </div>
+    </AuthGuard>
   );
 }
