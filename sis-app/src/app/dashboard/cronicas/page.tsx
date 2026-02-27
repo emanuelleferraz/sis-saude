@@ -52,6 +52,7 @@ import { SharedMenu } from "@/components/SharedMenu";
 import { obterDashboardCronica } from "@/services/dashboardDoencaService";
 import { DashboardCronicaDTO } from "@/types/dashboardDoenca";
 import { useRouter } from "next/navigation";
+import AuthGuard from "@/components/AuthGuard";
 
 interface DashboardCronicasProps {
   onBack: () => void;
@@ -176,6 +177,7 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
 
 
   return (
+    <AuthGuard>
     <div className="min-h-screen bg-blue-50">
       <header className="bg-white shadow-sm">
         <div className="flex items-center justify-between px-6 py-4">
@@ -432,5 +434,6 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
         </main>
       </div>
     </div>
+    </AuthGuard>
   );
 }
