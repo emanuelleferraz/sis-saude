@@ -1,8 +1,18 @@
-'use client';
-import { Activity, Search, User, Menu, X, Plus, Pencil, Trash2, Home } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+"use client";
+import {
+  Activity,
+  Search,
+  User,
+  Menu,
+  X,
+  Plus,
+  Pencil,
+  Trash2,
+  Home,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,7 +20,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -18,17 +28,28 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { SharedMenu } from '@/components/SharedMenu';
-import { DoencaRequestDTO, DoencaResponseDTO, TipoDoenca } from '@/types/doenca';
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { SharedMenu } from "@/components/SharedMenu";
+import {
+  DoencaRequestDTO,
+  DoencaResponseDTO,
+  TipoDoenca,
+} from "@/types/doenca";
 import {
   listarDoencas,
   criarDoenca,
   atualizarDoenca,
   deletarDoenca,
 } from "@/services/doencaService";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 interface DoencasPageProps {
   onBack: () => void;
@@ -39,109 +60,115 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [selectedDoenca, setSelectedDoenca] = useState<DoencaResponseDTO | null>(null);
+  const [selectedDoenca, setSelectedDoenca] =
+    useState<DoencaResponseDTO | null>(null);
 
-    const [doencas, setDoencas] = useState<DoencaResponseDTO[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
+  const [doencas, setDoencas] = useState<DoencaResponseDTO[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
-    const filteredDoencas = doencas.filter((doenca) =>
-        doenca.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doenca.tipo.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  const filteredDoencas = doencas.filter(
+    (doenca) =>
+      doenca.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doenca.tipo.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
-    const [nome, setNome] = useState("");
-    const [tipo, setTipo] = useState<TipoDoenca>("TRANSMISSIVEL");
-    const [classificacao, setClassificacao] = useState("");
+  const [nome, setNome] = useState("");
+  const [tipo, setTipo] = useState<TipoDoenca>("TRANSMISSIVEL");
+  const [classificacao, setClassificacao] = useState("");
 
-    const tipoLabel: Record<TipoDoenca, string> = {
-        CRONICA: "Crônica",
-        TRANSMISSIVEL: "Transmissível",
-    };
+  const tipoLabel: Record<TipoDoenca, string> = {
+    CRONICA: "Crônica",
+    TRANSMISSIVEL: "Transmissível",
+  };
+  const router = useRouter();
 
-    useEffect(() => {
-        carregarDoencas();
-    }, []);
+  useEffect(() => {
+    carregarDoencas();
+  }, []);
 
-        async function carregarDoencas() {
-            try {
-                setLoading(true);
-                const data = await listarDoencas();
-                setDoencas(data);
-            } catch (err) {
-                console.error("Erro ao carregar doenças:", err);
-            } finally {
-                setLoading(false);
-            }
+  async function carregarDoencas() {
+    try {
+      setLoading(true);
+      const data = await listarDoencas();
+      setDoencas(data);
+    } catch (err) {
+      console.error("Erro ao carregar doenças:", err);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    useEffect(() => {
-        if (selectedDoenca) {
-            setNome(selectedDoenca.nome);
-            setTipo(selectedDoenca.tipo);
-            setClassificacao(selectedDoenca.classificacao);
-        }
-    }, [selectedDoenca]);
-
-    function resetForm() {
-        setNome("");
-        setTipo("TRANSMISSIVEL");
-        setClassificacao("");
-        setSelectedDoenca(null);
+  useEffect(() => {
+    if (selectedDoenca) {
+      setNome(selectedDoenca.nome);
+      setTipo(selectedDoenca.tipo);
+      setClassificacao(selectedDoenca.classificacao);
     }
+  }, [selectedDoenca]);
 
-    async function handleCreate() {
-        try {
-            const novaDoenca: DoencaRequestDTO = {
-            nome,
-            tipo,
-            classificacao,
-            };
+  function resetForm() {
+    setNome("");
+    setTipo("TRANSMISSIVEL");
+    setClassificacao("");
+    setSelectedDoenca(null);
+  }
 
-            await criarDoenca(novaDoenca);
-            await carregarDoencas();
+  async function handleCreate() {
+    try {
+      const novaDoenca: DoencaRequestDTO = {
+        nome,
+        tipo,
+        classificacao,
+      };
 
-            setIsRegisterOpen(false);
-            resetForm();
-        } catch (err) {
-            console.error("Erro ao criar doença:", err);
-        }
+      await criarDoenca(novaDoenca);
+      await carregarDoencas();
+
+      setIsRegisterOpen(false);
+      resetForm();
+    } catch (err) {
+      console.error("Erro ao criar doença:", err);
     }
+  }
 
-    async function handleUpdate() {
-        if (!selectedDoenca) return;
+  async function handleUpdate() {
+    if (!selectedDoenca) return;
 
-        try {
-            const doencaAtualizada: DoencaRequestDTO = {
-            nome,
-            tipo,
-            classificacao,
-            };
+    try {
+      const doencaAtualizada: DoencaRequestDTO = {
+        nome,
+        tipo,
+        classificacao,
+      };
 
-            await atualizarDoenca(selectedDoenca.id, doencaAtualizada);
-            await carregarDoencas();
+      await atualizarDoenca(selectedDoenca.id, doencaAtualizada);
+      await carregarDoencas();
 
-            setIsEditOpen(false);
-            resetForm();
-        } catch (err) {
-            console.error("Erro ao atualizar doença:", err);
-        }
+      setIsEditOpen(false);
+      resetForm();
+    } catch (err) {
+      console.error("Erro ao atualizar doença:", err);
     }
+  }
 
-    async function handleDelete() {
-        if (!selectedDoenca) return;
+  async function handleDelete() {
+    if (!selectedDoenca) return;
 
-        try {
-            await deletarDoenca(selectedDoenca.id);
-            await carregarDoencas();
+    try {
+      await deletarDoenca(selectedDoenca.id);
+      await carregarDoencas();
 
-            setIsDeleteOpen(false);
-            setSelectedDoenca(null);
-        } catch (err) {
-            console.error("Erro ao excluir doença:", err);
-        }
+      setIsDeleteOpen(false);
+      setSelectedDoenca(null);
+    } catch (err) {
+      console.error("Erro ao excluir doença:", err);
     }
+  }
 
+  function handleMenuClick(key: string) {
+    router.push(`/${key}`);
+  }
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -153,12 +180,14 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
               onClick={() => setMenuOpen(!menuOpen)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              {menuOpen ? <X className="w-6 h-6 text-gray-700" /> : <Menu className="w-6 h-6 text-gray-700" />}
+              {menuOpen ? (
+                <X className="w-6 h-6 text-gray-700" />
+              ) : (
+                <Menu className="w-6 h-6 text-gray-700" />
+              )}
             </button>
-            <div className="bg-linear-to-br from-blue-600 to-cyan-500 p-2 rounded-xl">
-              <Activity className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl text-gray-800">Sistema de Saúde</span>
+              {/* Logo */}
+              <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
           </div>
 
           <div className="flex items-center gap-4">
@@ -179,19 +208,13 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
 
       <div className="flex">
         {/* Menu lateral */}
-        {menuOpen && (
-          <SharedMenu onMenuItemClick={(key) => {
-            if (key === 'sobre') {
-              onBack();
-            }
-          }} />
-        )}
+        {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
 
         {/* Conteúdo principal */}
         <main className="flex-1 p-8">
           {/* Botão Página Inicial */}
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
@@ -203,7 +226,7 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
             {/* Cabeçalho da página */}
             <div className="mb-6">
               <h1 className="text-3xl text-gray-800 mb-6">Doenças</h1>
-              
+
               <div className="flex items-center gap-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -216,7 +239,10 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
                   />
                 </div>
                 <Button
-                  onClick={() => {resetForm(); setIsRegisterOpen(true);}}
+                  onClick={() => {
+                    resetForm();
+                    setIsRegisterOpen(true);
+                  }}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -226,47 +252,49 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
             </div>
 
             {/* Tabela de doenças */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead>Classificação</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredDoencas.map((doenca) => (
-                  <TableRow key={doenca.id}>
-                    <TableCell>{doenca.nome}</TableCell>
-                    <TableCell>{tipoLabel[doenca.tipo]}</TableCell>
-                    <TableCell>{doenca.classificacao}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => {
-                            setSelectedDoenca(doenca);
-                            setIsEditOpen(true);
-                          }}
-                          className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                        >
-                          <Pencil className="w-4 h-4 text-blue-600" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedDoenca(doenca);
-                            setIsDeleteOpen(true);
-                          }}
-                          className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-600" />
-                        </button>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto max-h-125 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nome</TableHead>
+                    <TableHead>Tipo</TableHead>
+                    <TableHead>Classificação</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredDoencas.map((doenca) => (
+                    <TableRow key={doenca.id}>
+                      <TableCell>{doenca.nome}</TableCell>
+                      <TableCell>{tipoLabel[doenca.tipo]}</TableCell>
+                      <TableCell>{doenca.classificacao}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedDoenca(doenca);
+                              setIsEditOpen(true);
+                            }}
+                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Pencil className="w-4 h-4 text-blue-600" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedDoenca(doenca);
+                              setIsDeleteOpen(true);
+                            }}
+                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </main>
       </div>
@@ -283,7 +311,12 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="nome">Nome da Doença</Label>
-              <Input id="nome" placeholder="Digite o nome da doença" value={nome} onChange={(e) => setNome(e.target.value)} />
+              <Input
+                id="nome"
+                placeholder="Digite o nome da doença"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="tipo">Tipo</Label>
@@ -302,14 +335,22 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="classificacao">Classificação</Label>
-              <Input id="classificacao" placeholder="Ex: Cardiovascular, Metabólica" value={classificacao} onChange={(e) => setClassificacao(e.target.value)} />
+              <Input
+                id="classificacao"
+                placeholder="Ex: Cardiovascular, Metabólica"
+                value={classificacao}
+                onChange={(e) => setClassificacao(e.target.value)}
+              />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsRegisterOpen(false)}>
               Cancelar
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleCreate}>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={handleCreate}
+            >
               Salvar
             </Button>
           </DialogFooter>
@@ -321,14 +362,16 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
         <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Editar Doença</DialogTitle>
-            <DialogDescription>
-              Atualize os dados da doença
-            </DialogDescription>
+            <DialogDescription>Atualize os dados da doença</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="edit-nome">Nome da Doença</Label>
-              <Input id="edit-nome" value={nome} onChange={(e) => setNome(e.target.value)} />
+              <Input
+                id="edit-nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="tipo">Tipo</Label>
@@ -347,14 +390,21 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="edit-classificacao">Classificação</Label>
-              <Input id="edit-classificacao" value={classificacao} onChange={(e) => setClassificacao(e.target.value)} />
+              <Input
+                id="edit-classificacao"
+                value={classificacao}
+                onChange={(e) => setClassificacao(e.target.value)}
+              />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditOpen(false)}>
               Cancelar
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleUpdate}>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={handleUpdate}
+            >
               Atualizar
             </Button>
           </DialogFooter>
@@ -367,15 +417,17 @@ export default function DoencasPage({ onBack }: DoencasPageProps) {
           <DialogHeader>
             <DialogTitle>Confirmar Exclusão</DialogTitle>
             <DialogDescription>
-              Tem certeza que deseja excluir a doença <strong>{selectedDoenca?.nome}</strong>? Esta ação não pode ser desfeita.
+              Tem certeza que deseja excluir a doença{" "}
+              <strong>{selectedDoenca?.nome}</strong>? Esta ação não pode ser
+              desfeita.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
               Cancelar
             </Button>
-            <Button 
-              className="bg-red-600 hover:bg-red-700 text-white" 
+            <Button
+              className="bg-red-600 hover:bg-red-700 text-white"
               onClick={handleDelete}
             >
               Excluir

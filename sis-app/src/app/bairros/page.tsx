@@ -1,10 +1,25 @@
-'use client';
+"use client";
 
-import { listarBairros, criarBairro, atualizarBairro, deletarBairro } from '@/services/bairroService';
-import { Activity, Search, User, Menu, X, Plus, Pencil, Trash2, Home } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import {
+  listarBairros,
+  criarBairro,
+  atualizarBairro,
+  deletarBairro,
+} from "@/services/bairroService";
+import {
+  Activity,
+  Search,
+  User,
+  Menu,
+  X,
+  Plus,
+  Pencil,
+  Trash2,
+  Home,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -12,7 +27,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -20,10 +35,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { SharedMenu } from '@/components/SharedMenu';
-import { Bairro } from '@/types/bairro';
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { SharedMenu } from "@/components/SharedMenu";
+import { Bairro } from "@/types/bairro";
+import { useRouter } from "next/navigation";
 
 interface BairrosPageProps {
   onBack: () => void;
@@ -38,69 +54,79 @@ export default function BairrosPage({ onBack }: BairrosPageProps) {
 
   const [bairros, setBairros] = useState<Bairro[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchBairros = async () => {
-        try {
+      try {
         const data = await listarBairros();
         setBairros(data);
-        } catch (err) {
+      } catch (err) {
         console.error("Erro ao carregar bairros:", err);
-        } finally {
+      } finally {
         setLoading(false);
-        }
+      }
     };
     fetchBairros();
-}, []);
+  }, []);
 
-    const handleCreateBairro = async () => {
-        const nomeInput = (document.getElementById("nome") as HTMLInputElement).value;
-        if (!nomeInput) return;
+  const handleCreateBairro = async () => {
+    const nomeInput = (document.getElementById("nome") as HTMLInputElement)
+      .value;
+    if (!nomeInput) return;
 
-        try {
-            const novoBairro = await criarBairro({ nome: nomeInput });
-            setBairros(prev => [...prev, novoBairro]);
-            setIsRegisterOpen(false);
-        } catch (err) {
-            console.error("Erro ao criar bairro:", err);
-        }
-    };
+    try {
+      const novoBairro = await criarBairro({ nome: nomeInput });
+      setBairros((prev) => [...prev, novoBairro]);
+      setIsRegisterOpen(false);
+    } catch (err) {
+      console.error("Erro ao criar bairro:", err);
+    }
+  };
 
-    const handleUpdateBairro = async () => {
-        if (!selectedBairro) return;
-        const nomeInput = (document.getElementById("edit-nome") as HTMLInputElement).value;
-        if (!nomeInput) return;
+  const handleUpdateBairro = async () => {
+    if (!selectedBairro) return;
+    const nomeInput = (document.getElementById("edit-nome") as HTMLInputElement)
+      .value;
+    if (!nomeInput) return;
 
-        try {
-            const updated = await atualizarBairro(selectedBairro.id, { nome: nomeInput });
-            setBairros(prev => prev.map(b => b.id === updated.id ? updated : b));
-            setIsEditOpen(false);
-            setSelectedBairro(null);
-        } catch (err) {
-            console.error("Erro ao atualizar bairro:", err);
-        }
-    };
+    try {
+      const updated = await atualizarBairro(selectedBairro.id, {
+        nome: nomeInput,
+      });
+      setBairros((prev) =>
+        prev.map((b) => (b.id === updated.id ? updated : b)),
+      );
+      setIsEditOpen(false);
+      setSelectedBairro(null);
+    } catch (err) {
+      console.error("Erro ao atualizar bairro:", err);
+    }
+  };
 
-    const handleDeleteBairro = async () => {
-        if (!selectedBairro) return;
+  const handleDeleteBairro = async () => {
+    if (!selectedBairro) return;
 
-        try {
-            await deletarBairro(selectedBairro.id);
-            setBairros(prev => prev.filter(b => b.id !== selectedBairro.id));
-            setIsDeleteOpen(false);
-            setSelectedBairro(null);
-        } catch (err) {
-            console.error("Erro ao deletar bairro:", err);
-        }
-    };
+    try {
+      await deletarBairro(selectedBairro.id);
+      setBairros((prev) => prev.filter((b) => b.id !== selectedBairro.id));
+      setIsDeleteOpen(false);
+      setSelectedBairro(null);
+    } catch (err) {
+      console.error("Erro ao deletar bairro:", err);
+    }
+  };
 
-//Filtro por nome
+  //Filtro por nome
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredBairros = bairros.filter((bairro) =>
-    bairro.nome.toLowerCase().includes(searchTerm.toLowerCase())
+    bairro.nome.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
+  function handleMenuClick(key: string) {
+    router.push(`/${key}`);
+  }
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -112,12 +138,14 @@ export default function BairrosPage({ onBack }: BairrosPageProps) {
               onClick={() => setMenuOpen(!menuOpen)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              {menuOpen ? <X className="w-6 h-6 text-gray-700" /> : <Menu className="w-6 h-6 text-gray-700" />}
+              {menuOpen ? (
+                <X className="w-6 h-6 text-gray-700" />
+              ) : (
+                <Menu className="w-6 h-6 text-gray-700" />
+              )}
             </button>
-            <div className="bg-linear-to-br from-blue-600 to-cyan-500 p-2 rounded-xl">
-              <Activity className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl text-gray-800">Sistema de Saúde</span>
+              {/* Logo */}
+              <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
           </div>
 
           <div className="flex items-center gap-4">
@@ -138,19 +166,13 @@ export default function BairrosPage({ onBack }: BairrosPageProps) {
 
       <div className="flex">
         {/* Menu lateral */}
-        {menuOpen && (
-          <SharedMenu onMenuItemClick={(key) => {
-            if (key === 'sobre') {
-              onBack();
-            }
-          }} />
-        )}
+        {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
 
         {/* Conteúdo principal */}
         <main className="flex-1 p-8">
           {/* Botão Página Inicial */}
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
@@ -162,7 +184,7 @@ export default function BairrosPage({ onBack }: BairrosPageProps) {
             {/* Cabeçalho da página */}
             <div className="mb-6">
               <h1 className="text-3xl text-gray-800 mb-6">Bairros</h1>
-              
+
               <div className="flex items-center gap-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -185,43 +207,45 @@ export default function BairrosPage({ onBack }: BairrosPageProps) {
             </div>
 
             {/* Tabela de bairros */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome do Bairro</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredBairros.map((bairro) => (
-                  <TableRow key={bairro.id}>
-                    <TableCell>{bairro.nome}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => {
-                            setSelectedBairro(bairro);
-                            setIsEditOpen(true);
-                          }}
-                          className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                        >
-                          <Pencil className="w-4 h-4 text-blue-600" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedBairro(bairro);
-                            setIsDeleteOpen(true);
-                          }}
-                          className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-600" />
-                        </button>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto max-h-125 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nome do Bairro</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredBairros.map((bairro) => (
+                    <TableRow key={bairro.id}>
+                      <TableCell>{bairro.nome}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedBairro(bairro);
+                              setIsEditOpen(true);
+                            }}
+                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Pencil className="w-4 h-4 text-blue-600" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedBairro(bairro);
+                              setIsDeleteOpen(true);
+                            }}
+                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </main>
       </div>
@@ -245,7 +269,10 @@ export default function BairrosPage({ onBack }: BairrosPageProps) {
             <Button variant="outline" onClick={() => setIsRegisterOpen(false)}>
               Cancelar
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleCreateBairro}>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={handleCreateBairro}
+            >
               Salvar
             </Button>
           </DialogFooter>
@@ -257,9 +284,7 @@ export default function BairrosPage({ onBack }: BairrosPageProps) {
         <DialogContent className="sm:max-w-125">
           <DialogHeader>
             <DialogTitle>Editar Bairro</DialogTitle>
-            <DialogDescription>
-              Atualize os dados do bairro
-            </DialogDescription>
+            <DialogDescription>Atualize os dados do bairro</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
@@ -271,7 +296,10 @@ export default function BairrosPage({ onBack }: BairrosPageProps) {
             <Button variant="outline" onClick={() => setIsEditOpen(false)}>
               Cancelar
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleUpdateBairro}>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={handleUpdateBairro}
+            >
               Atualizar
             </Button>
           </DialogFooter>
@@ -284,15 +312,17 @@ export default function BairrosPage({ onBack }: BairrosPageProps) {
           <DialogHeader>
             <DialogTitle>Confirmar Exclusão</DialogTitle>
             <DialogDescription>
-              Tem certeza que deseja excluir o bairro <strong>{selectedBairro?.nome}</strong>? Esta ação não pode ser desfeita.
+              Tem certeza que deseja excluir o bairro{" "}
+              <strong>{selectedBairro?.nome}</strong>? Esta ação não pode ser
+              desfeita.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
               Cancelar
             </Button>
-            <Button 
-              className="bg-red-600 hover:bg-red-700 text-white" 
+            <Button
+              className="bg-red-600 hover:bg-red-700 text-white"
               onClick={handleDeleteBairro}
             >
               Excluir

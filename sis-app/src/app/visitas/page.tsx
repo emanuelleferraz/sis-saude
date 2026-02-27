@@ -49,6 +49,7 @@ import {
 } from "@/services/visitaService";
 import { getPacientes } from "@/services/pacienteService";
 import { listarAgentesSaude } from "@/services/agenteService";
+import { useRouter } from "next/navigation";
 
 interface VisitasDomiciliaresPageProps {
   onBack: () => void;
@@ -76,6 +77,7 @@ export default function VisitasDomiciliaresPage({
   const [observacoes, setObservacoes] = useState("");
 
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     carregarDados();
@@ -188,6 +190,10 @@ export default function VisitasDomiciliaresPage({
       v.nomeAgente.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
+  function handleMenuClick(key: string) {
+    router.push(`/${key}`);
+  }
+
   return (
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
@@ -204,10 +210,8 @@ export default function VisitasDomiciliaresPage({
                 <Menu className="w-6 h-6 text-gray-700" />
               )}
             </button>
-            <div className="bg-linear-to-br from-blue-600 to-cyan-500 p-2 rounded-xl">
-              <Activity className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl text-gray-800">Sistema de Saúde</span>
+              {/* Logo */}
+              <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
           </div>
 
           <div className="flex items-center gap-4">
@@ -230,11 +234,7 @@ export default function VisitasDomiciliaresPage({
         {/* Menu lateral */}
         {menuOpen && (
           <SharedMenu
-            onMenuItemClick={(key) => {
-              if (key === "sobre") {
-                onBack();
-              }
-            }}
+            onMenuItemClick={handleMenuClick}
           />
         )}
 
@@ -242,7 +242,7 @@ export default function VisitasDomiciliaresPage({
         <main className="flex-1 p-8">
           {/* Botão Página Inicial */}
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >

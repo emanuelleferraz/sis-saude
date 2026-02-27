@@ -21,24 +21,24 @@ export function SharedMenu({ onMenuItemClick }: SharedMenuProps) {
   ];
 
   const vacinacaoSubItems = [
-    { label: 'Dashboard', key: 'vacinacao' },
-    { label: 'Registrar Vacinação', key: 'registrar-vacinacao' },
+    { label: 'Dashboard', key: 'dashboard/vacinas' },
+    { label: 'Registrar Vacinação', key: 'aplicacoes-vacina' },
   ];
 
   const configuracoesSubItems = [
-    { label: 'Bairros', key: 'config-bairros' },
-    { label: 'Endereços', key: 'config-enderecos' },
-    { label: 'Vacinas', key: 'config-vacinas' },
-    { label: 'Unidades PSF', key: 'config-unidades-psf' },
-    { label: 'Doenças', key: 'config-doencas' },
-    { label: 'Usuários', key: 'config-usuarios' },
+    { label: 'Bairros', key: 'bairros' },
+    { label: 'Endereços', key: 'enderecos' },
+    { label: 'Vacinas', key: 'vacinas' },
+    { label: 'Unidades PSF', key: 'unidades' },
+    { label: 'Doenças', key: 'doencas' },
+    { label: 'Usuários', key: 'usuarios' },
   ];
 
   const menuItemsAfter = [
     { icon: Calendar, label: 'Consultas', key: 'consultas' },
-    { icon: HomeIcon, label: 'Visitas Domiciliares', key: 'visitas-domiciliares' },
-    { icon: Heart, label: 'Doenças Crônicas', key: 'cronicas' },
-    { icon: Globe, label: 'Doenças Epidemiológicas', key: 'epidemiologicas' },
+    { icon: HomeIcon, label: 'Visitas Domiciliares', key: 'visitas' },
+    { icon: Heart, label: 'Doenças Crônicas', key: 'dashboard/cronicas' },
+    { icon: Globe, label: 'Doenças Epidemiológicas', key: 'dashboard/epidemiologicas' },
     { icon: FileText, label: 'Documentação', key: 'documentacao' },
   ];
 

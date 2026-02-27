@@ -37,10 +37,8 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
         <div className="w-full max-w-md space-y-8">
           {/* Logo e Nome */}
           <div className="flex items-center justify-center gap-3">
-            <div className="bg-linear-to-br from-blue-600 to-cyan-500 p-3 rounded-xl">
-              <Activity className="w-8 h-8 text-white" />
-            </div>
-            <span className="text-2xl text-gray-800">Sistema de Saúde</span>
+              {/* Logo */}
+              <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
           </div>
 
           {/* Bem-vindo */}

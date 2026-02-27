@@ -51,6 +51,7 @@ import {
 import { SharedMenu } from "@/components/SharedMenu";
 import { obterDashboardCronica } from "@/services/dashboardDoencaService";
 import { DashboardCronicaDTO } from "@/types/dashboardDoenca";
+import { useRouter } from "next/navigation";
 
 interface DashboardCronicasProps {
   onBack: () => void;
@@ -69,6 +70,9 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [dados, setDados] = useState<DashboardCronicaDTO | null>(null);
+    // Filtro de Bairros
+  const [bairroFiltro, setBairroFiltro] = useState<string>('todos');
+  const router = useRouter();
 
   useEffect(() => {
     async function carregar() {
@@ -92,6 +96,7 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
     tendenciaTrimestral,
     alertas,
   } = dados;
+  
 
   // Normalizador para chave dinâmica do gráfico
   const normalizar = (texto: string) =>
@@ -159,6 +164,17 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
         : 0,
   }));
 
+  const bairrosUnicos = Array.from(new Set(alertas.map((item) => item.bairro)));
+  const alertasFiltrados =
+    bairroFiltro === "todos"
+      ? alertas
+      : alertas.filter((item) => item.bairro === bairroFiltro);
+
+        function handleMenuClick(key: string) {
+          router.push(`/${key}`);
+        }
+
+
   return (
     <div className="min-h-screen bg-blue-50">
       <header className="bg-white shadow-sm">
@@ -174,22 +190,20 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
                 <Menu className="w-6 h-6 text-gray-700" />
               )}
             </button>
-            <div className="bg-linear-to-br from-blue-600 to-cyan-500 p-2 rounded-xl">
-              <Activity className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl text-gray-800">Sistema de Saúde</span>
+              {/* Logo */}
+              <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
           </div>
         </div>
       </header>
 
       <div className="flex">
         {menuOpen && (
-          <SharedMenu onMenuItemClick={(key) => key === "sobre" && onBack()} />
+          <SharedMenu onMenuItemClick={handleMenuClick} />
         )}
 
         <main className="flex-1 p-8">
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-6 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
@@ -361,6 +375,24 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
               <CardDescription>
                 Status detalhado de casos por doença e bairro
               </CardDescription>
+              <div className="mb-4 flex flex-col sm:flex-row sm:items-center gap-3">
+                <label className="text-sm font-medium text-gray-700">
+                  Filtrar por bairro:
+                </label>
+
+                <select
+                  value={bairroFiltro}
+                  onChange={(e) => setBairroFiltro(e.target.value)}
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="todos">Todos</option>
+                  {bairrosUnicos.map((bairro) => (
+                    <option key={bairro} value={bairro}>
+                      {bairro}
+                    </option>
+                  ))}
+                </select>
+            </div>
             </CardHeader>
             <CardContent>
               <div className="max-h-100 overflow-y-auto overflow-x-auto">
@@ -374,7 +406,7 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {alertas.map((item, index) => (
+                    {alertasFiltrados.map((item, index) => (
                       <TableRow key={index}>
                         <TableCell className="font-medium">
                           {item.doenca}

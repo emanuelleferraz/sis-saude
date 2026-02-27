@@ -51,6 +51,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 interface EnfermeirosPageProps {
   onBack: () => void;
@@ -76,6 +77,12 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
   const [tipo, setTipo] = useState<EnumTypeEnfermagem | "">("");
 
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
+
+  const tipoLabel: Record<EnumTypeEnfermagem, string> = {
+      Enfermeiro: "Enfermeiro(a)",
+      Tecnico_Enfermagem: "Técnico em Enfermagem",
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -95,15 +102,15 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
     fetchData();
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     if (selectedEnfermeiro) {
-        setNome(selectedEnfermeiro.nome);
-        setCoren(selectedEnfermeiro.coren);
-        setTelefone(selectedEnfermeiro.telefone);
-        setUnidadeId(selectedEnfermeiro.unidadeId);
-        setTipo(selectedEnfermeiro.tipo);
+      setNome(selectedEnfermeiro.nome);
+      setCoren(selectedEnfermeiro.coren);
+      setTelefone(selectedEnfermeiro.telefone);
+      setUnidadeId(selectedEnfermeiro.unidadeId);
+      setTipo(selectedEnfermeiro.tipo);
     }
-    }, [selectedEnfermeiro]);
+  }, [selectedEnfermeiro]);
 
   function resetForm() {
     setNome("");
@@ -200,6 +207,10 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
       enf.tipo.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
+  function handleMenuClick(key: string) {
+    router.push(`/${key}`);
+  }
+
   return (
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
@@ -216,10 +227,8 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
                 <Menu className="w-6 h-6 text-gray-700" />
               )}
             </button>
-            <div className="bg-linear-to-br from-blue-600 to-cyan-500 p-2 rounded-xl">
-              <Activity className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl text-gray-800">Sistema de Saúde</span>
+              {/* Logo */}
+              <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
           </div>
 
           <div className="flex items-center gap-4">
@@ -240,21 +249,13 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
 
       <div className="flex">
         {/* Menu lateral */}
-        {menuOpen && (
-          <SharedMenu
-            onMenuItemClick={(key) => {
-              if (key === "sobre") {
-                onBack();
-              }
-            }}
-          />
-        )}
+        {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
 
         {/* Conteúdo principal */}
         <main className="flex-1 p-8">
           {/* Botão Página Inicial */}
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
@@ -279,7 +280,10 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
                   />
                 </div>
                 <Button
-                  onClick={() => {resetForm(); setIsRegisterOpen(true);}}
+                  onClick={() => {
+                    resetForm();
+                    setIsRegisterOpen(true);
+                  }}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -287,50 +291,51 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
                 </Button>
               </div>
             </div>
-
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>COREN</TableHead>
-                  <TableHead>Cargo</TableHead>
-                  <TableHead>Unidade</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredEnfermeiros.map((enfermeiro) => (
-                  <TableRow key={enfermeiro.id}>
-                    <TableCell>{enfermeiro.nome}</TableCell>
-                    <TableCell>{enfermeiro.coren}</TableCell>
-                    <TableCell>{enfermeiro.tipo}</TableCell>
-                    <TableCell>{enfermeiro.nomeUnidade}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => {
-                            setSelectedEnfermeiro(enfermeiro);
-                            setIsEditOpen(true);
-                          }}
-                          className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                        >
-                          <Pencil className="w-4 h-4 text-blue-600" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedEnfermeiro(enfermeiro);
-                            setIsDeleteOpen(true);
-                          }}
-                          className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-600" />
-                        </button>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto max-h-125 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nome</TableHead>
+                    <TableHead>COREN</TableHead>
+                    <TableHead>Cargo</TableHead>
+                    <TableHead>Unidade</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredEnfermeiros.map((enfermeiro) => (
+                    <TableRow key={enfermeiro.id}>
+                      <TableCell>{enfermeiro.nome}</TableCell>
+                      <TableCell>{enfermeiro.coren}</TableCell>
+                      <TableCell>{tipoLabel[enfermeiro.tipo]}</TableCell>
+                      <TableCell>{enfermeiro.nomeUnidade}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedEnfermeiro(enfermeiro);
+                              setIsEditOpen(true);
+                            }}
+                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Pencil className="w-4 h-4 text-blue-600" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedEnfermeiro(enfermeiro);
+                              setIsDeleteOpen(true);
+                            }}
+                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </main>
       </div>
@@ -373,20 +378,20 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="cargo">Cargo</Label>
-                <Select
+              <Select
                 value={tipo}
                 onValueChange={(value) => setTipo(value as EnumTypeEnfermagem)}
-                >
+              >
                 <SelectTrigger>
-                    <SelectValue placeholder="Selecione o cargo" />
+                  <SelectValue placeholder="Selecione o cargo" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="Enfermeiro">Enfermeiro</SelectItem>
-                    <SelectItem value="Tecnico_Enfermagem">
+                  <SelectItem value="Enfermeiro">Enfermeiro</SelectItem>
+                  <SelectItem value="Tecnico_Enfermagem">
                     Técnico de Enfermagem
-                    </SelectItem>
+                  </SelectItem>
                 </SelectContent>
-                </Select>
+              </Select>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="unidade">Unidade</Label>
@@ -420,7 +425,7 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {/* MODAL DE UPDATE*/}            
+      {/* MODAL DE UPDATE*/}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
@@ -432,11 +437,19 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="edit-nome">Nome Completo</Label>
-              <Input id="edit-nome" value={nome} onChange={(e) => setNome(e.target.value)}/>
+              <Input
+                id="edit-nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="edit-coren">COREN</Label>
-              <Input id="edit-coren" value={coren} onChange={(e) => setCoren(e.target.value)} />
+              <Input
+                id="edit-coren"
+                value={coren}
+                onChange={(e) => setCoren(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="telefone">Telefone</Label>
@@ -448,21 +461,21 @@ export default function EnfermeirosPage({ onBack }: EnfermeirosPageProps) {
               />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="cargo">Cargo</Label>
-                <Select
+              <Label htmlFor="cargo">Cargo</Label>
+              <Select
                 value={tipo}
                 onValueChange={(value) => setTipo(value as EnumTypeEnfermagem)}
-                >
+              >
                 <SelectTrigger>
-                    <SelectValue placeholder="Selecione o cargo" />
+                  <SelectValue placeholder="Selecione o cargo" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="Enfermeiro">Enfermeiro</SelectItem>
-                    <SelectItem value="Tecnico_Enfermagem">
+                  <SelectItem value="Enfermeiro">Enfermeiro</SelectItem>
+                  <SelectItem value="Tecnico_Enfermagem">
                     Técnico de Enfermagem
-                    </SelectItem>
+                  </SelectItem>
                 </SelectContent>
-                </Select>
+              </Select>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="unidade">Unidade</Label>
