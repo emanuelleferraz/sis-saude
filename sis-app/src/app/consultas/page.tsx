@@ -49,6 +49,7 @@ import { getPacientes } from "@/services/pacienteService";
 import { listarUnidades } from "@/services/unidadeService";
 import { listarDoencas } from "@/services/doencaService";
 import { listarMedicos } from "@/services/medicoService";
+import { useRouter } from "next/navigation";
 
 interface ConsultasPageProps {
   onBack: () => void;
@@ -76,6 +77,7 @@ export default function ConsultasPage({ onBack }: ConsultasPageProps) {
   const [horaConsulta, setHoraConsulta] = useState("");
   const [observacoes, setObservacoes] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     carregarDados();
@@ -230,6 +232,10 @@ export default function ConsultasPage({ onBack }: ConsultasPageProps) {
     }
   }
 
+    function handleMenuClick(key: string) {
+      router.push(`/${key}`);
+    }
+
   return (
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
@@ -272,11 +278,7 @@ export default function ConsultasPage({ onBack }: ConsultasPageProps) {
         {/* Menu lateral */}
         {menuOpen && (
           <SharedMenu
-            onMenuItemClick={(key) => {
-              if (key === "sobre") {
-                onBack();
-              }
-            }}
+            onMenuItemClick={handleMenuClick}
           />
         )}
 
@@ -284,7 +286,7 @@ export default function ConsultasPage({ onBack }: ConsultasPageProps) {
         <main className="flex-1 p-8">
           {/* Botão Página Inicial */}
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >

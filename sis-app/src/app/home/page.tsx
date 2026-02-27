@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { SharedMenu } from "@/components/SharedMenu";
 import { useRouter } from "next/navigation";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface HomePageProps {
   onModuleSelect?: (module: string) => void;
@@ -24,19 +25,19 @@ export default function HomePage({ onModuleSelect }: HomePageProps) {
     {
       name: "Doenças Crônicas",
       image: "/doenca-cronica.png",
-      key: "cronicas",
+      key: "dashboard/cronicas",
       bgColor: "bg-gradient-to-br from-blue-600 to-cyan-500",
     },
     {
       name: "Doenças Epidemiológicas",
       image: "/doenca-epidemio.png",
-      key: "epidemiologicas",
+      key: "dashboard/epidemiologicas",
       bgColor: "bg-gradient-to-br from-blue-600 to-cyan-500",
     },
     {
       name: "Vacinação",
       image: "/modulo-vacina.png",
-      key: "vacinacao",
+      key: "dashboard/vacinas",
       bgColor: "bg-gradient-to-br from-blue-600 to-cyan-500",
     },
   ];
@@ -68,7 +69,7 @@ export default function HomePage({ onModuleSelect }: HomePageProps) {
 
             <span className="text-xl text-gray-800">Sistema de Saúde</span>
           </div>
-          
+
           {/* Barra de pesquisa e perfil */}
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -79,11 +80,26 @@ export default function HomePage({ onModuleSelect }: HomePageProps) {
                 className="pl-10 pr-4 py-2 w-80 rounded-lg"
               />
             </div>
-            <div className="bg-gray-200 p-2 rounded-full cursor-pointer hover:bg-gray-300 transition-colors">
-              <User className="w-6 h-6 text-gray-700" />
-            </div>
-          </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="bg-gray-200 p-2 rounded-full cursor-pointer hover:bg-gray-300 transition-colors">
+                  <User className="w-6 h-6 text-gray-700" />
+                </div>
+              </DropdownMenuTrigger>
 
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem
+                  onClick={() => {
+                    localStorage.removeItem("token"); 
+                    router.push("/login");
+                  }}
+                  className="cursor-pointer text-red-600"
+                >
+                  Log Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </header>
 
@@ -105,7 +121,7 @@ export default function HomePage({ onModuleSelect }: HomePageProps) {
               {modules.map((module) => (
                 <div
                   key={module.key}
-                  onClick={() => onModuleSelect?.(module.key)}
+                  onClick={() => router.push(`/${module.key}`)}
                   className="flex flex-col items-center cursor-pointer group"
                 >
                   <div

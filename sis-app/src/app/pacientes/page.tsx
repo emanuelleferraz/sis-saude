@@ -141,14 +141,14 @@ export default function PacientesPage({
 
   // Apenas para melhorar visualização do CPF
   const formatCPF = (cpf: string) => {
-  return cpf
-    .replace(/\D/g, "")
-    .replace(/(\d{3})(\d)/, "$1.$2")
-    .replace(/(\d{3})(\d)/, "$1.$2")
-    .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    return cpf
+      .replace(/\D/g, "")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
   };
 
-// Apenas para melhorar inserção do telefone
+  // Apenas para melhorar inserção do telefone
   const formatTelefone = (telefone: string) => {
     let num = telefone.replace(/\D/g, "");
     num = num.substring(0, 11);
@@ -168,8 +168,12 @@ export default function PacientesPage({
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredPacientes = pacientes.filter((p) =>
-    p.nome.toLowerCase().includes(searchTerm.toLowerCase())
+    p.nome.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+  function handleMenuClick(key: string) {
+    router.push(`/${key}`);
+  }
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -211,21 +215,13 @@ export default function PacientesPage({
 
       <div className="flex">
         {/* Menu lateral */}
-        {menuOpen && (
-          <SharedMenu
-            onMenuItemClick={(key) => {
-              if (key === "sobre") {
-                onBack();
-              }
-            }}
-          />
-        )}
+        {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
 
         {/* Conteúdo principal */}
         <main className="flex-1 p-8">
           {/* Botão Página Inicial */}
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
@@ -260,77 +256,79 @@ export default function PacientesPage({
             </div>
 
             {/* Tabela de pacientes */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>CPF</TableHead>
-                  <TableHead>Data Nascimento</TableHead>
-                  <TableHead>Sexo</TableHead>
-                  <TableHead>Bairro</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {loading && (
+            <div className="overflow-x-auto max-h-125 overflow-y-auto">
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={6}>Carregando...</TableCell>
+                    <TableHead>Nome</TableHead>
+                    <TableHead>CPF</TableHead>
+                    <TableHead>Data Nascimento</TableHead>
+                    <TableHead>Sexo</TableHead>
+                    <TableHead>Bairro</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
-                )}
+                </TableHeader>
+                <TableBody>
+                  {loading && (
+                    <TableRow>
+                      <TableCell colSpan={6}>Carregando...</TableCell>
+                    </TableRow>
+                  )}
 
-                {error && (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-red-600">
-                      {error}
-                    </TableCell>
-                  </TableRow>
-                )}
-
-                {!loading &&
-                  filteredPacientes.map((paciente) => (
-                    <TableRow key={paciente.id}>
-                      <TableCell>{paciente.nome}</TableCell>
-                      <TableCell>{formatCPF(paciente.cpf)}</TableCell>
-                      <TableCell>
-                        {new Date(paciente.dataNascimento).toLocaleDateString(
-                          "pt-BR",
-                          { timeZone: "UTC" },
-                        )}
-                      </TableCell>
-                      <TableCell>{paciente.sexo}</TableCell>
-                      <TableCell>{paciente.bairro}</TableCell>
-                      <TableCell className="text-right">
-                        <button
-                          onClick={() => {
-                            setSelectedPatient(paciente);
-                            handleOpenEdit(paciente);
-                          }}
-                          className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                        >
-                          <Pencil className="w-4 h-4 text-blue-600" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedPatient(paciente);
-                            setIsDeleteOpen(true);
-                          }}
-                          className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-600" />
-                        </button>
-                        <button
-                          onClick={() =>
-                            router.push(`/pacientes/${paciente.id}/resumo/`)
-                          }
-                          className="p-2 hover:bg-gray-50 rounded-lg transition-colors"
-                        >
-                          <FileText className="w-4 h-4 text-gray-600" />
-                        </button>
+                  {error && (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-red-600">
+                        {error}
                       </TableCell>
                     </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
+                  )}
+
+                  {!loading &&
+                    filteredPacientes.map((paciente) => (
+                      <TableRow key={paciente.id}>
+                        <TableCell>{paciente.nome}</TableCell>
+                        <TableCell>{formatCPF(paciente.cpf)}</TableCell>
+                        <TableCell>
+                          {new Date(paciente.dataNascimento).toLocaleDateString(
+                            "pt-BR",
+                            { timeZone: "UTC" },
+                          )}
+                        </TableCell>
+                        <TableCell>{paciente.sexo}</TableCell>
+                        <TableCell>{paciente.bairro}</TableCell>
+                        <TableCell className="text-right">
+                          <button
+                            onClick={() => {
+                              setSelectedPatient(paciente);
+                              handleOpenEdit(paciente);
+                            }}
+                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Pencil className="w-4 h-4 text-blue-600" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedPatient(paciente);
+                              setIsDeleteOpen(true);
+                            }}
+                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </button>
+                          <button
+                            onClick={() =>
+                              router.push(`/pacientes/${paciente.id}/resumo/`)
+                            }
+                            className="p-2 hover:bg-gray-50 rounded-lg transition-colors"
+                          >
+                            <FileText className="w-4 h-4 text-gray-600" />
+                          </button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </main>
       </div>
@@ -423,7 +421,7 @@ export default function PacientesPage({
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Selecione o endereço" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-60 overflow-y-auto">
                   {enderecos.map((endereco) => (
                     <SelectItem key={endereco.id} value={String(endereco.id)}>
                       {endereco.rua}, {endereco.numero} - {endereco.bairroNome}
@@ -554,7 +552,7 @@ export default function PacientesPage({
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Selecione o endereço" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-60 overflow-y-auto">
                   {enderecos.map((endereco) => (
                     <SelectItem
                       key={endereco.id}

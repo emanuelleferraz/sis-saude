@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { SharedMenu } from '@/components/SharedMenu';
 import { obterDashboardVacina } from '@/services/dashboardVacinaService';
+import { useRouter } from "next/navigation";
 import { DashboardVacinaDTO, CoberturaVacinalBairroDTO, DistribuicaoVacinaDTO, EvolucaoDosesTrimestreDTO, AplicacaoPorUnidadeDTO, CardResumoVacinaDTO } from '@/types/dashboardVacina';
 
 interface DashboardVacinacaoProps {
@@ -25,6 +26,7 @@ export default function DashboardVacinacao({ onBack, onNavigate }: DashboardVaci
   const [loading, setLoading] = useState(true);
 
   const cores = ['#3b82f6', '#06b6d4', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchDashboard() {
@@ -65,6 +67,10 @@ export default function DashboardVacinacao({ onBack, onNavigate }: DashboardVaci
     new Set(aplicacoesUnidade.map((item) => item.vacina))
   );
 
+    function handleMenuClick(key: string) {
+      router.push(`/${key}`);
+    }
+
   return (
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
@@ -94,11 +100,11 @@ export default function DashboardVacinacao({ onBack, onNavigate }: DashboardVaci
 
       <div className="flex">
         {/* Menu lateral */}
-        {menuOpen && <SharedMenu onMenuItemClick={(key) => key === 'sobre' && onBack()} />}
+        {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
 
         {/* Conteúdo principal */}
         <main className="flex-1 p-8">
-          <Button onClick={onBack} variant="ghost" className="mb-6 text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+          <Button onClick={() => router.push("/home")} variant="ghost" className="mb-6 text-blue-600 hover:text-blue-700 hover:bg-blue-50">
             <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
           </Button>
 

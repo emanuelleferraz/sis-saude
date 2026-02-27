@@ -51,6 +51,7 @@ import {
 import { SharedMenu } from "@/components/SharedMenu";
 import { obterDashboardCronica } from "@/services/dashboardDoencaService";
 import { DashboardCronicaDTO } from "@/types/dashboardDoenca";
+import { useRouter } from "next/navigation";
 
 interface DashboardCronicasProps {
   onBack: () => void;
@@ -71,6 +72,7 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
   const [dados, setDados] = useState<DashboardCronicaDTO | null>(null);
     // Filtro de Bairros
   const [bairroFiltro, setBairroFiltro] = useState<string>('todos');
+  const router = useRouter();
 
   useEffect(() => {
     async function carregar() {
@@ -168,6 +170,10 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
       ? alertas
       : alertas.filter((item) => item.bairro === bairroFiltro);
 
+        function handleMenuClick(key: string) {
+          router.push(`/${key}`);
+        }
+
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -194,12 +200,12 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
 
       <div className="flex">
         {menuOpen && (
-          <SharedMenu onMenuItemClick={(key) => key === "sobre" && onBack()} />
+          <SharedMenu onMenuItemClick={handleMenuClick} />
         )}
 
         <main className="flex-1 p-8">
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-6 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >

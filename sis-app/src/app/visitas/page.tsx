@@ -49,6 +49,7 @@ import {
 } from "@/services/visitaService";
 import { getPacientes } from "@/services/pacienteService";
 import { listarAgentesSaude } from "@/services/agenteService";
+import { useRouter } from "next/navigation";
 
 interface VisitasDomiciliaresPageProps {
   onBack: () => void;
@@ -76,6 +77,7 @@ export default function VisitasDomiciliaresPage({
   const [observacoes, setObservacoes] = useState("");
 
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     carregarDados();
@@ -188,6 +190,10 @@ export default function VisitasDomiciliaresPage({
       v.nomeAgente.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
+  function handleMenuClick(key: string) {
+    router.push(`/${key}`);
+  }
+
   return (
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
@@ -230,11 +236,7 @@ export default function VisitasDomiciliaresPage({
         {/* Menu lateral */}
         {menuOpen && (
           <SharedMenu
-            onMenuItemClick={(key) => {
-              if (key === "sobre") {
-                onBack();
-              }
-            }}
+            onMenuItemClick={handleMenuClick}
           />
         )}
 
@@ -242,7 +244,7 @@ export default function VisitasDomiciliaresPage({
         <main className="flex-1 p-8">
           {/* Botão Página Inicial */}
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >

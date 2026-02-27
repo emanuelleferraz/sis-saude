@@ -1,8 +1,18 @@
-'use client';
-import { Activity, Search, User, Menu, X, Plus, Pencil, Trash2, Home } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+"use client";
+import {
+  Activity,
+  Search,
+  User,
+  Menu,
+  X,
+  Plus,
+  Pencil,
+  Trash2,
+  Home,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,7 +20,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -18,198 +28,220 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { SharedMenu } from '@/components/SharedMenu';
-import { AplicacaoVacinaResponseDTO } from '@/types/aplicacaoVacina';
-import { PacienteResponseDTO } from '@/types/paciente';
-import { VacinaResponseDTO } from '@/types/vacina';
-import { ProfissionalEnfermagemResponseDTO } from '@/types/profissionalEnfermagem';
-import { UnidadeResponseDTO } from '@/types/unidade';
-import { atualizarAplicacaoVacina, criarAplicacaoVacina, deletarAplicacaoVacina, listarAplicacoesVacina } from '@/services/aplicacaoVacinaService';
-import { getPacientes } from '@/services/pacienteService';
-import { listarVacinas } from '@/services/vacinaService';
-import { listarProfissionaisEnfermagem } from '@/services/profissionalEnfermagemService';
-import { listarUnidades } from '@/services/unidadeService';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { SharedMenu } from "@/components/SharedMenu";
+import { AplicacaoVacinaResponseDTO } from "@/types/aplicacaoVacina";
+import { PacienteResponseDTO } from "@/types/paciente";
+import { VacinaResponseDTO } from "@/types/vacina";
+import { ProfissionalEnfermagemResponseDTO } from "@/types/profissionalEnfermagem";
+import { UnidadeResponseDTO } from "@/types/unidade";
+import {
+  atualizarAplicacaoVacina,
+  criarAplicacaoVacina,
+  deletarAplicacaoVacina,
+  listarAplicacoesVacina,
+} from "@/services/aplicacaoVacinaService";
+import { getPacientes } from "@/services/pacienteService";
+import { listarVacinas } from "@/services/vacinaService";
+import { listarProfissionaisEnfermagem } from "@/services/profissionalEnfermagemService";
+import { listarUnidades } from "@/services/unidadeService";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 interface RegistroVacinacaoPageProps {
   onBack: () => void;
 }
 
-export default function RegistroVacinacaoPage({ onBack }: RegistroVacinacaoPageProps) {
+export default function RegistroVacinacaoPage({
+  onBack,
+}: RegistroVacinacaoPageProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [selectedRegistro, setSelectedRegistro] = useState<AplicacaoVacinaResponseDTO | null>(null);
+  const [selectedRegistro, setSelectedRegistro] =
+    useState<AplicacaoVacinaResponseDTO | null>(null);
 
-    const [registros, setRegistros] = useState<AplicacaoVacinaResponseDTO[]>([]);
+  const [registros, setRegistros] = useState<AplicacaoVacinaResponseDTO[]>([]);
 
-    const [pacientes, setPacientes] = useState<PacienteResponseDTO[]>([]);
-    const [vacinas, setVacinas] = useState<VacinaResponseDTO[]>([]);
-    const [enfermeiros, setEnfermeiros] = useState<ProfissionalEnfermagemResponseDTO[]>([]);
-    const [unidades, setUnidades] = useState<UnidadeResponseDTO[]>([]);
+  const [pacientes, setPacientes] = useState<PacienteResponseDTO[]>([]);
+  const [vacinas, setVacinas] = useState<VacinaResponseDTO[]>([]);
+  const [enfermeiros, setEnfermeiros] = useState<
+    ProfissionalEnfermagemResponseDTO[]
+  >([]);
+  const [unidades, setUnidades] = useState<UnidadeResponseDTO[]>([]);
 
-    const [pacienteId, setPacienteId] = useState<number | null>(null);
-    const [vacinaId, setVacinaId] = useState<number | null>(null);
-    const [enfermeiroId, setEnfermeiroId] = useState<number | null>(null);
-    const [unidadeId, setUnidadeId] = useState<number | null>(null);
+  const [pacienteId, setPacienteId] = useState<number | null>(null);
+  const [vacinaId, setVacinaId] = useState<number | null>(null);
+  const [enfermeiroId, setEnfermeiroId] = useState<number | null>(null);
+  const [unidadeId, setUnidadeId] = useState<number | null>(null);
 
-    const [data, setData] = useState("");
-    const [dose, setDose] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
+  const [data, setData] = useState("");
+  const [dose, setDose] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
-    useEffect(() => {
-      carregarDados();
-    }, []);
+  useEffect(() => {
+    carregarDados();
+  }, []);
 
-    async function carregarDados() {
-      try {
-        const [
-          registrosData,
-          pacientesData,
-          vacinasData,
-          enfermeirosData,
-          unidadesData,
-        ] = await Promise.all([
-          listarAplicacoesVacina(),
-          getPacientes(),
-          listarVacinas(),
-          listarProfissionaisEnfermagem(),
-          listarUnidades(),
-        ]);
+  async function carregarDados() {
+    try {
+      const [
+        registrosData,
+        pacientesData,
+        vacinasData,
+        enfermeirosData,
+        unidadesData,
+      ] = await Promise.all([
+        listarAplicacoesVacina(),
+        getPacientes(),
+        listarVacinas(),
+        listarProfissionaisEnfermagem(),
+        listarUnidades(),
+      ]);
 
-        setRegistros(registrosData);
-        setPacientes(pacientesData);
-        setVacinas(vacinasData);
-        setEnfermeiros(enfermeirosData);
-        setUnidades(unidadesData);
-      } catch (error) {
-        console.error("Erro ao carregar dados:", error);
-      }
+      setRegistros(registrosData);
+      setPacientes(pacientesData);
+      setVacinas(vacinasData);
+      setEnfermeiros(enfermeirosData);
+      setUnidades(unidadesData);
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
     }
+  }
 
-    useEffect(() => {
-      if (selectedRegistro) {
-        const dateObj = new Date(selectedRegistro.dataAplicacao);
-        const dataFormatada = dateObj.toISOString().split("T")[0];
+  useEffect(() => {
+    if (selectedRegistro) {
+      const dateObj = new Date(selectedRegistro.dataAplicacao);
+      const dataFormatada = dateObj.toISOString().split("T")[0];
 
-        setData(dataFormatada);
-        setDose(selectedRegistro.dose);
+      setData(dataFormatada);
+      setDose(selectedRegistro.dose);
 
-        const paciente = pacientes.find(
-          (p) => p.nome === selectedRegistro.nomePaciente,
-        );
+      const paciente = pacientes.find(
+        (p) => p.nome === selectedRegistro.nomePaciente,
+      );
 
-        const vacina = vacinas.find(
-          (v) => v.nome === selectedRegistro.nomeVacina,
-        );
+      const vacina = vacinas.find(
+        (v) => v.nome === selectedRegistro.nomeVacina,
+      );
 
-        const enfermeiro = enfermeiros.find(
-          (e) => e.nome === selectedRegistro.nomeEnfermeiro,
-        );
+      const enfermeiro = enfermeiros.find(
+        (e) => e.nome === selectedRegistro.nomeEnfermeiro,
+      );
 
-        const unidade = unidades.find(
-          (u) => u.nome === selectedRegistro.nomeUnidade,
-        );
+      const unidade = unidades.find(
+        (u) => u.nome === selectedRegistro.nomeUnidade,
+      );
 
-        setPacienteId(paciente?.id || null);
-        setVacinaId(vacina?.id || null);
-        setEnfermeiroId(enfermeiro?.id || null);
-        setUnidadeId(unidade?.id || null);
-      }
-    }, [selectedRegistro, pacientes, vacinas, enfermeiros, unidades]);
-
-    function resetForm() {
-      setPacienteId(null);
-      setVacinaId(null);
-      setEnfermeiroId(null);
-      setUnidadeId(null);
-      setData("");
-      setDose("");
-      setSelectedRegistro(null);
+      setPacienteId(paciente?.id || null);
+      setVacinaId(vacina?.id || null);
+      setEnfermeiroId(enfermeiro?.id || null);
+      setUnidadeId(unidade?.id || null);
     }
+  }, [selectedRegistro, pacientes, vacinas, enfermeiros, unidades]);
 
-    const filteredRegistros = registros.filter(
-        (r) =>
-            r.nomePaciente.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            r.nomeVacina.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            r.nomeEnfermeiro.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            r.nomeUnidade.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  function resetForm() {
+    setPacienteId(null);
+    setVacinaId(null);
+    setEnfermeiroId(null);
+    setUnidadeId(null);
+    setData("");
+    setDose("");
+    setSelectedRegistro(null);
+  }
 
-    async function handleCreate() {
-      if (!pacienteId || !vacinaId || !enfermeiroId || !unidadeId || !data)
-        return;
+  const filteredRegistros = registros.filter(
+    (r) =>
+      r.nomePaciente.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.nomeVacina.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.nomeEnfermeiro.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.nomeUnidade.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
-      try {
-        await criarAplicacaoVacina({
-          pacienteId,
-          vacinaId,
-          enfermeiroId,
-          unidadeId,
-          dose,
-          dataAplicacao: data, // apenas data
-        });
+  async function handleCreate() {
+    if (!pacienteId || !vacinaId || !enfermeiroId || !unidadeId || !data)
+      return;
 
-        await carregarDados();
-        resetForm();
-        setIsRegisterOpen(false);
-      } catch (error) {
-        console.error("Erro ao criar aplicação:", error);
-      }
+    try {
+      await criarAplicacaoVacina({
+        pacienteId,
+        vacinaId,
+        enfermeiroId,
+        unidadeId,
+        dose,
+        dataAplicacao: data, // apenas data
+      });
+
+      await carregarDados();
+      resetForm();
+      setIsRegisterOpen(false);
+    } catch (error) {
+      console.error("Erro ao criar aplicação:", error);
     }
+  }
 
-    async function handleUpdate() {
-      if (
-        !selectedRegistro ||
-        !pacienteId ||
-        !vacinaId ||
-        !enfermeiroId ||
-        !unidadeId ||
-        !data
-      )
-        return;
+  async function handleUpdate() {
+    if (
+      !selectedRegistro ||
+      !pacienteId ||
+      !vacinaId ||
+      !enfermeiroId ||
+      !unidadeId ||
+      !data
+    )
+      return;
 
-      try {
-        await atualizarAplicacaoVacina(selectedRegistro.id, {
-          pacienteId,
-          vacinaId,
-          enfermeiroId,
-          unidadeId,
-          dose,
-          dataAplicacao: data, // apenas data
-        });
+    try {
+      await atualizarAplicacaoVacina(selectedRegistro.id, {
+        pacienteId,
+        vacinaId,
+        enfermeiroId,
+        unidadeId,
+        dose,
+        dataAplicacao: data, // apenas data
+      });
 
-        await carregarDados();
-        resetForm();
-        setIsEditOpen(false);
-      } catch (error) {
-        console.error("Erro ao atualizar aplicação:", error);
-      }
+      await carregarDados();
+      resetForm();
+      setIsEditOpen(false);
+    } catch (error) {
+      console.error("Erro ao atualizar aplicação:", error);
     }
+  }
 
-    async function handleDelete() {
-      if (!selectedRegistro) return;
+  async function handleDelete() {
+    if (!selectedRegistro) return;
 
-      try {
-        await deletarAplicacaoVacina(selectedRegistro.id);
-        await carregarDados();
-        setIsDeleteOpen(false);
-        resetForm();
-      } catch (error) {
-        console.error("Erro ao deletar aplicação:", error);
-      }
+    try {
+      await deletarAplicacaoVacina(selectedRegistro.id);
+      await carregarDados();
+      setIsDeleteOpen(false);
+      resetForm();
+    } catch (error) {
+      console.error("Erro ao deletar aplicação:", error);
     }
+  }
 
-        function formatDateOnly(dateString: string | undefined) {
-          if (!dateString) return "-";
+  function formatDateOnly(dateString: string | undefined) {
+    if (!dateString) return "-";
 
-          const [year, month, day] = dateString.split("-");
+    const [year, month, day] = dateString.split("-");
 
-          return `${day}/${month}/${year}`;
-        }
+    return `${day}/${month}/${year}`;
+  }
+
+  function handleMenuClick(key: string) {
+    router.push(`/${key}`);
+  }
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -251,21 +283,13 @@ export default function RegistroVacinacaoPage({ onBack }: RegistroVacinacaoPageP
 
       <div className="flex">
         {/* Menu lateral */}
-        {menuOpen && (
-          <SharedMenu
-            onMenuItemClick={(key) => {
-              if (key === "sobre") {
-                onBack();
-              }
-            }}
-          />
-        )}
+        {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
 
         {/* Conteúdo principal */}
         <main className="flex-1 p-8">
           {/* Botão Página Inicial */}
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
@@ -292,7 +316,10 @@ export default function RegistroVacinacaoPage({ onBack }: RegistroVacinacaoPageP
                   />
                 </div>
                 <Button
-                  onClick={() => {resetForm(); setIsRegisterOpen(true);}}
+                  onClick={() => {
+                    resetForm();
+                    setIsRegisterOpen(true);
+                  }}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -302,53 +329,57 @@ export default function RegistroVacinacaoPage({ onBack }: RegistroVacinacaoPageP
             </div>
 
             {/* Tabela de registros */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome do Paciente</TableHead>
-                  <TableHead>Nome da Vacina</TableHead>
-                  <TableHead>Data da Aplicação</TableHead>
-                  <TableHead>Dose</TableHead>
-                  <TableHead>Enfermeiro</TableHead>
-                  <TableHead>Unidade PSF</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredRegistros.map((registro) => (
-                  <TableRow key={registro.id}>
-                    <TableCell>{registro.nomePaciente}</TableCell>
-                    <TableCell>{registro.nomeVacina}</TableCell>
-                    <TableCell>{formatDateOnly(registro.dataAplicacao)}</TableCell>
-                    <TableCell>{registro.dose}</TableCell>
-                    <TableCell>{registro.nomeEnfermeiro}</TableCell>
-                    <TableCell>{registro.nomeUnidade}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => {
-                            setSelectedRegistro(registro);
-                            setIsEditOpen(true);
-                          }}
-                          className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                        >
-                          <Pencil className="w-4 h-4 text-blue-600" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedRegistro(registro);
-                            setIsDeleteOpen(true);
-                          }}
-                          className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-600" />
-                        </button>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto max-h-125 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nome do Paciente</TableHead>
+                    <TableHead>Nome da Vacina</TableHead>
+                    <TableHead>Data da Aplicação</TableHead>
+                    <TableHead>Dose</TableHead>
+                    <TableHead>Enfermeiro</TableHead>
+                    <TableHead>Unidade PSF</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredRegistros.map((registro) => (
+                    <TableRow key={registro.id}>
+                      <TableCell>{registro.nomePaciente}</TableCell>
+                      <TableCell>{registro.nomeVacina}</TableCell>
+                      <TableCell>
+                        {formatDateOnly(registro.dataAplicacao)}
+                      </TableCell>
+                      <TableCell>{registro.dose}</TableCell>
+                      <TableCell>{registro.nomeEnfermeiro}</TableCell>
+                      <TableCell>{registro.nomeUnidade}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedRegistro(registro);
+                              setIsEditOpen(true);
+                            }}
+                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Pencil className="w-4 h-4 text-blue-600" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedRegistro(registro);
+                              setIsDeleteOpen(true);
+                            }}
+                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </main>
       </div>

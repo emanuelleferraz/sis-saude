@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { useRouter } from "next/navigation";
 import { SharedMenu } from '@/components/SharedMenu';
 import { obterDashboardEpidemiologica } from '@/services/dashboardDoencaService';
 import { DashboardEpidemiologicaDTO, AlertaBairroDTO, DistribuicaoDoencaDTO, IncidenciaPorBairroDTO, TendenciaTrimestralDTO } from '@/types/dashboardDoenca';
@@ -33,6 +34,7 @@ export default function DashboardEpidemiologicas({ onBack }: DashboardEpidemiolo
   const [bairroFiltro, setBairroFiltro] = useState<string>('todos');
 
   const cores = ['#3b82f6', '#06b6d4', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+  const router = useRouter();
 
   // Função para buscar os dados do dashboard
   useEffect(() => {
@@ -102,6 +104,10 @@ export default function DashboardEpidemiologicas({ onBack }: DashboardEpidemiolo
 
   const bairrosUnicos = Array.from(new Set(alertas.map((item) => item.bairro)));
 
+    function handleMenuClick(key: string) {
+      router.push(`/${key}`);
+    }
+
   return (
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
@@ -142,12 +148,12 @@ export default function DashboardEpidemiologicas({ onBack }: DashboardEpidemiolo
 
       <div className="flex">
         {menuOpen && (
-          <SharedMenu onMenuItemClick={(key) => key === "sobre" && onBack()} />
+          <SharedMenu onMenuItemClick={handleMenuClick} />
         )}
 
         <main className="flex-1 p-8">
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-6 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >

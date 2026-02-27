@@ -50,6 +50,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
 
 interface AgentesPageProps {
   onBack: () => void;
@@ -73,6 +74,7 @@ export default function AgentesPage({ onBack }: AgentesPageProps) {
   const [bairroId, setBairroId] = useState<number | null>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchData() {
@@ -201,6 +203,10 @@ export default function AgentesPage({ onBack }: AgentesPageProps) {
       .replace(/(\d{5})(\d)/, "$1-$2");
   };
 
+    function handleMenuClick(key: string) {
+      router.push(`/${key}`);
+    }
+
   return (
     <div className="min-h-screen bg-blue-50">
       {/* Header */}
@@ -241,21 +247,13 @@ export default function AgentesPage({ onBack }: AgentesPageProps) {
 
       <div className="flex">
         {/* Menu lateral */}
-        {menuOpen && (
-          <SharedMenu
-            onMenuItemClick={(key) => {
-              if (key === "sobre") {
-                onBack();
-              }
-            }}
-          />
-        )}
+        {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
 
         {/* Conteúdo principal */}
         <main className="flex-1 p-8">
           {/* Botão Página Inicial */}
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
@@ -278,7 +276,10 @@ export default function AgentesPage({ onBack }: AgentesPageProps) {
                   />
                 </div>
                 <Button
-                  onClick={() => {resetForm(); setIsRegisterOpen(true);}}
+                  onClick={() => {
+                    resetForm();
+                    setIsRegisterOpen(true);
+                  }}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -286,50 +287,51 @@ export default function AgentesPage({ onBack }: AgentesPageProps) {
                 </Button>
               </div>
             </div>
-
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Telefone</TableHead>
-                  <TableHead>Área de Atuação</TableHead>
-                  <TableHead>Unidade</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAgentes.map((agente) => (
-                  <TableRow key={agente.id}>
-                    <TableCell>{agente.nome}</TableCell>
-                    <TableCell>{agente.telefone}</TableCell>
-                    <TableCell>{agente.nomeBairro}</TableCell>
-                    <TableCell>{agente.nomeUnidade}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => {
-                            setSelectedAgente(agente);
-                            setIsEditOpen(true);
-                          }}
-                          className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                        >
-                          <Pencil className="w-4 h-4 text-blue-600" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedAgente(agente);
-                            setIsDeleteOpen(true);
-                          }}
-                          className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-600" />
-                        </button>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto max-h-125 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nome</TableHead>
+                    <TableHead>Telefone</TableHead>
+                    <TableHead>Área de Atuação</TableHead>
+                    <TableHead>Unidade</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredAgentes.map((agente) => (
+                    <TableRow key={agente.id}>
+                      <TableCell>{agente.nome}</TableCell>
+                      <TableCell>{agente.telefone}</TableCell>
+                      <TableCell>{agente.nomeBairro}</TableCell>
+                      <TableCell>{agente.nomeUnidade}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedAgente(agente);
+                              setIsEditOpen(true);
+                            }}
+                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Pencil className="w-4 h-4 text-blue-600" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedAgente(agente);
+                              setIsDeleteOpen(true);
+                            }}
+                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </main>
       </div>
@@ -421,7 +423,11 @@ export default function AgentesPage({ onBack }: AgentesPageProps) {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="edit-nome">Nome Completo</Label>
-              <Input id="edit-nome" value={nome} onChange={(e) => setNome(e.target.value)} />
+              <Input
+                id="edit-nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="edit-telefone">Telefone</Label>

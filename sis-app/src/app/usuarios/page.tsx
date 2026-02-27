@@ -1,8 +1,18 @@
-'use client';
-import { Activity, Search, User, Menu, X, Plus, Pencil, Trash2, Home } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+"use client";
+import {
+  Activity,
+  Search,
+  User,
+  Menu,
+  X,
+  Plus,
+  Pencil,
+  Trash2,
+  Home,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -10,7 +20,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -18,21 +28,30 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { SharedMenu } from '@/components/SharedMenu';
-import { PerfilResponseDTO } from '@/types/perfil';
-import { UsuarioRequestDTO, UsuarioResponseDTO, UsuarioUpdateDTO } from '@/types/usuario';
-import { atualizarUsuario, criarUsuario, deletarUsuario, listarUsuarios } from '@/services/usuarioService';
-import { listarPerfis } from '@/services/perfilService';
-import { Value } from '@radix-ui/react-select';
+} from "@/components/ui/select";
+import { SharedMenu } from "@/components/SharedMenu";
+import { PerfilResponseDTO } from "@/types/perfil";
+import {
+  UsuarioRequestDTO,
+  UsuarioResponseDTO,
+  UsuarioUpdateDTO,
+} from "@/types/usuario";
+import {
+  atualizarUsuario,
+  criarUsuario,
+  deletarUsuario,
+  listarUsuarios,
+} from "@/services/usuarioService";
+import { listarPerfis } from "@/services/perfilService";
+import { useRouter } from "next/navigation";
 
 interface UsuariosPageProps {
   onBack: () => void;
@@ -43,121 +62,125 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
- const [selectedUsuario, setSelectedUsuario] = useState<UsuarioResponseDTO | null>(null);
+  const [selectedUsuario, setSelectedUsuario] =
+    useState<UsuarioResponseDTO | null>(null);
 
-    const [usuarios, setUsuarios] = useState<UsuarioResponseDTO[]>([]);
-    const [perfis, setPerfis] = useState<PerfilResponseDTO[]>([]);
+  const [usuarios, setUsuarios] = useState<UsuarioResponseDTO[]>([]);
+  const [perfis, setPerfis] = useState<PerfilResponseDTO[]>([]);
 
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
-    const filteredUsuarios = usuarios.filter((usuario) =>
-        usuario.nome.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredUsuarios = usuarios.filter((usuario) =>
+    usuario.nome.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
-    const [nome, setNome] = useState("");
-    const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
-    const [perfilId, setPerfilId] = useState<number | null>(null);
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [perfilId, setPerfilId] = useState<number | null>(null);
+  const router = useRouter();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-            const [usuariosData, perfisData] = await Promise.all([
-                listarUsuarios(),
-                listarPerfis(),
-            ]);
-
-            setUsuarios(usuariosData);
-            setPerfis(perfisData);
-            } catch (err) {
-            console.error("Erro ao carregar dados:", err);
-            } finally {
-            setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-      if (selectedUsuario) {
-        setNome(selectedUsuario.nome);
-        setEmail(selectedUsuario.email);
-
-        const perfil = perfis.find(
-          (p) => p.nome === selectedUsuario.perfilNome,
-        );
-
-        setPerfilId(perfil?.id || null);
-      }
-    }, [selectedUsuario, perfis]);
-
-    const resetForm = () => {
-        setNome("");
-        setEmail("");
-        setSenha("");
-        setPerfilId(null);
-    };
-
-    const handleCreateUsuario = async () => {
-      if (!nome || !email || !senha || perfilId == null) return;
-
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        const newUsuario: UsuarioRequestDTO = {
-          nome,
-          email,
-          senha,
-          perfilId,
-        };
+        const [usuariosData, perfisData] = await Promise.all([
+          listarUsuarios(),
+          listarPerfis(),
+        ]);
 
-        await criarUsuario(newUsuario);
-        const data = await listarUsuarios();
-        setUsuarios(data);
-
-        setIsRegisterOpen(false);
-        resetForm();
+        setUsuarios(usuariosData);
+        setPerfis(perfisData);
       } catch (err) {
-        console.error("Erro ao criar usuário:", err);
+        console.error("Erro ao carregar dados:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const handleUpdateUsuario = async () => {
-      if (!selectedUsuario || !nome || !email || perfilId == null) return;
+    fetchData();
+  }, []);
 
-      try {
-        const updatedUsuario: UsuarioUpdateDTO = {
-          nome,
-          email,
-          perfilId,
-        };
+  useEffect(() => {
+    if (selectedUsuario) {
+      setNome(selectedUsuario.nome);
+      setEmail(selectedUsuario.email);
 
-        await atualizarUsuario(selectedUsuario.id, updatedUsuario);
-        const data = await listarUsuarios();
-        setUsuarios(data);
+      const perfil = perfis.find((p) => p.nome === selectedUsuario.perfilNome);
 
-        setSelectedUsuario(null);
-        resetForm();
-        setIsEditOpen(false);
-      } catch (err) {
-        console.error("Erro ao atualizar usuário:", err);
-      }
-    };
+      setPerfilId(perfil?.id || null);
+    }
+  }, [selectedUsuario, perfis]);
 
-    const handleDeleteUsuario = async () => {
-        if (!selectedUsuario) return;
+  const resetForm = () => {
+    setNome("");
+    setEmail("");
+    setSenha("");
+    setPerfilId(null);
+  };
 
-        try {
-            await deletarUsuario(selectedUsuario.id);
-            const data = await listarUsuarios();
-            setUsuarios(data);
+  const handleCreateUsuario = async () => {
+    if (!nome || !email || !senha || perfilId == null) return;
 
-            setSelectedUsuario(null);
-            setIsDeleteOpen(false);
-        } catch (err) {
-            console.error("Erro ao deletar usuário:", err);
-            alert("Erro ao deletar usuário.");
-        }
-    };
+    try {
+      const newUsuario: UsuarioRequestDTO = {
+        nome,
+        email,
+        senha,
+        perfilId,
+      };
+
+      await criarUsuario(newUsuario);
+      const data = await listarUsuarios();
+      setUsuarios(data);
+
+      setIsRegisterOpen(false);
+      resetForm();
+    } catch (err) {
+      console.error("Erro ao criar usuário:", err);
+    }
+  };
+
+  const handleUpdateUsuario = async () => {
+    if (!selectedUsuario || !nome || !email || perfilId == null) return;
+
+    try {
+      const updatedUsuario: UsuarioUpdateDTO = {
+        nome,
+        email,
+        perfilId,
+      };
+
+      await atualizarUsuario(selectedUsuario.id, updatedUsuario);
+      const data = await listarUsuarios();
+      setUsuarios(data);
+
+      setSelectedUsuario(null);
+      resetForm();
+      setIsEditOpen(false);
+    } catch (err) {
+      console.error("Erro ao atualizar usuário:", err);
+    }
+  };
+
+  const handleDeleteUsuario = async () => {
+    if (!selectedUsuario) return;
+
+    try {
+      await deletarUsuario(selectedUsuario.id);
+      const data = await listarUsuarios();
+      setUsuarios(data);
+
+      setSelectedUsuario(null);
+      setIsDeleteOpen(false);
+    } catch (err) {
+      console.error("Erro ao deletar usuário:", err);
+      alert("Erro ao deletar usuário.");
+    }
+  };
+
+  function handleMenuClick(key: string) {
+    router.push(`/${key}`);
+  }
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -169,7 +192,11 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
               onClick={() => setMenuOpen(!menuOpen)}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              {menuOpen ? <X className="w-6 h-6 text-gray-700" /> : <Menu className="w-6 h-6 text-gray-700" />}
+              {menuOpen ? (
+                <X className="w-6 h-6 text-gray-700" />
+              ) : (
+                <Menu className="w-6 h-6 text-gray-700" />
+              )}
             </button>
             <div className="bg-linear-to-br from-blue-600 to-cyan-500 p-2 rounded-xl">
               <Activity className="w-6 h-6 text-white" />
@@ -195,19 +222,13 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
 
       <div className="flex">
         {/* Menu lateral */}
-        {menuOpen && (
-          <SharedMenu onMenuItemClick={(key) => {
-            if (key === 'sobre') {
-              onBack();
-            }
-          }} />
-        )}
+        {menuOpen && <SharedMenu onMenuItemClick={handleMenuClick} />}
 
         {/* Conteúdo principal */}
         <main className="flex-1 p-8">
           {/* Botão Página Inicial */}
           <Button
-            onClick={onBack}
+            onClick={() => router.push("/home")}
             variant="ghost"
             className="mb-4 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
           >
@@ -219,7 +240,7 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
             {/* Cabeçalho da página */}
             <div className="mb-6">
               <h1 className="text-3xl text-gray-800 mb-6">Usuários</h1>
-              
+
               <div className="flex items-center gap-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -232,7 +253,10 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
                   />
                 </div>
                 <Button
-                  onClick={() => {resetForm(); setIsRegisterOpen(true);}}
+                  onClick={() => {
+                    resetForm();
+                    setIsRegisterOpen(true);
+                  }}
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -242,47 +266,49 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
             </div>
 
             {/* Tabela de usuários */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Perfil</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsuarios.map((usuario) => (
-                  <TableRow key={usuario.id}>
-                    <TableCell>{usuario.nome}</TableCell>
-                    <TableCell>{usuario.email}</TableCell>
-                    <TableCell>{usuario.perfilNome}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => {
-                            setSelectedUsuario(usuario);
-                            setIsEditOpen(true);
-                          }}
-                          className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
-                        >
-                          <Pencil className="w-4 h-4 text-blue-600" />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedUsuario(usuario);
-                            setIsDeleteOpen(true);
-                          }}
-                          className="p-2 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-red-600" />
-                        </button>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto max-h-125 overflow-y-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nome</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Perfil</TableHead>
+                    <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredUsuarios.map((usuario) => (
+                    <TableRow key={usuario.id}>
+                      <TableCell>{usuario.nome}</TableCell>
+                      <TableCell>{usuario.email}</TableCell>
+                      <TableCell>{usuario.perfilNome}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedUsuario(usuario);
+                              setIsEditOpen(true);
+                            }}
+                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Pencil className="w-4 h-4 text-blue-600" />
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedUsuario(usuario);
+                              setIsDeleteOpen(true);
+                            }}
+                            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </main>
       </div>
@@ -299,19 +325,39 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="nome">Nome</Label>
-              <Input id="nome" placeholder="Digite o nome completo" value={nome} onChange={(e) => setNome(e.target.value)} />
+              <Input
+                id="nome"
+                placeholder="Digite o nome completo"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="email@exemplo.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input
+                id="email"
+                type="email"
+                placeholder="email@exemplo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="senha">Senha</Label>
-              <Input id="senha" type="password" placeholder="Digite a senha" value={senha} onChange={(e) => setSenha(e.target.value)} />
+              <Input
+                id="senha"
+                type="password"
+                placeholder="Digite a senha"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="perfil">Perfil</Label>
-              <Select value={perfilId?.toString() || ""} onValueChange={(value) => setPerfilId(Number(value))}>
+              <Select
+                value={perfilId?.toString() || ""}
+                onValueChange={(value) => setPerfilId(Number(value))}
+              >
                 <SelectTrigger id="perfil">
                   <SelectValue placeholder="Selecione o perfil" />
                 </SelectTrigger>
@@ -329,7 +375,10 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
             <Button variant="outline" onClick={() => setIsRegisterOpen(false)}>
               Cancelar
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleCreateUsuario}>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={handleCreateUsuario}
+            >
               Salvar
             </Button>
           </DialogFooter>
@@ -341,22 +390,32 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
         <DialogContent className="w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 overflow-auto max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>Editar Usuário</DialogTitle>
-            <DialogDescription>
-              Atualize os dados do usuário
-            </DialogDescription>
+            <DialogDescription>Atualize os dados do usuário</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="edit-nome">Nome</Label>
-              <Input id="edit-nome" value={nome} onChange={(e) => setNome(e.target.value)} />
+              <Input
+                id="edit-nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="edit-email">Email</Label>
-              <Input id="edit-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input
+                id="edit-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="edit-perfil">Perfil</Label>
-              <Select value={perfilId?.toString() || ""} onValueChange={(value) => setPerfilId(Number(value))}>
+              <Select
+                value={perfilId?.toString() || ""}
+                onValueChange={(value) => setPerfilId(Number(value))}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o perfil" />
                 </SelectTrigger>
@@ -374,7 +433,10 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
             <Button variant="outline" onClick={() => setIsEditOpen(false)}>
               Cancelar
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700" onClick={handleUpdateUsuario}>
+            <Button
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={handleUpdateUsuario}
+            >
               Atualizar
             </Button>
           </DialogFooter>
@@ -387,15 +449,17 @@ export default function UsuariosPage({ onBack }: UsuariosPageProps) {
           <DialogHeader>
             <DialogTitle>Confirmar Exclusão</DialogTitle>
             <DialogDescription>
-              Tem certeza que deseja excluir o usuário <strong>{selectedUsuario?.nome}</strong>? Esta ação não pode ser desfeita.
+              Tem certeza que deseja excluir o usuário{" "}
+              <strong>{selectedUsuario?.nome}</strong>? Esta ação não pode ser
+              desfeita.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
               Cancelar
             </Button>
-            <Button 
-              className="bg-red-600 hover:bg-red-700 text-white" 
+            <Button
+              className="bg-red-600 hover:bg-red-700 text-white"
               onClick={handleDeleteUsuario}
             >
               Excluir
