@@ -171,10 +171,8 @@ export default function VacinasPage({ onBack }: VacinasPageProps) {
                 <Menu className="w-6 h-6 text-gray-700" />
               )}
             </button>
-            <div className="bg-linear-to-br from-blue-600 to-cyan-500 p-2 rounded-xl">
-              <Activity className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl text-gray-800">Sistema de Saúde</span>
+              {/* Logo */}
+              <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
           </div>
 
           <div className="flex items-center gap-4">
