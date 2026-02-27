@@ -38,14 +38,14 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           {/* Logo e Nome */}
           <div className="flex items-center justify-center gap-3">
               {/* Logo */}
-              <img src="/logo.png" alt="Logo Vitalis" className="h-10 w-auto" />
+              <img src="/logo.png" alt="Logo Vitalis" className="h-16 w-auto" />
           </div>
 
           {/* Bem-vindo */}
           <div className="text-center">
             <h1 className="text-3xl text-gray-800 mb-2">Bem-vindo</h1>
             <p className="text-gray-600">
-              Faça login no sistema com sua conta Sistema de Saúde
+              Faça login no sistema com sua conta Vitalis
             </p>
           </div>
 

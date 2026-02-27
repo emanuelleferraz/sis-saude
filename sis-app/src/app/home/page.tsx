@@ -8,10 +8,11 @@ import {
   User,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SharedMenu } from "@/components/SharedMenu";
 import { useRouter } from "next/navigation";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { jwtDecode } from "jwt-decode";
 
 interface HomePageProps {
   onModuleSelect?: (module: string) => void;
@@ -20,6 +21,16 @@ interface HomePageProps {
 export default function HomePage({ onModuleSelect }: HomePageProps) {
   const [menuOpen, setMenuOpen] = useState(true);
   const router = useRouter();
+
+  const [userName, setUserName] = useState("");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    const decoded: any = jwtDecode(token);
+    setUserName(decoded.nome);
+  }, []);
 
   const modules = [
     {
@@ -44,6 +55,11 @@ export default function HomePage({ onModuleSelect }: HomePageProps) {
 
   function handleMenuClick(key: string) {
     router.push(`/${key}`);
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    router.replace("/login");
   }
 
   return (
@@ -106,7 +122,7 @@ export default function HomePage({ onModuleSelect }: HomePageProps) {
           <div className="bg-white rounded-2xl shadow-sm p-8 max-w-6xl mx-auto">
             {/* Saudação */}
             <div className="mb-8 text-center">
-              <h1 className="text-3xl text-gray-800 mb-2">Olá, Usuário</h1>
+              <h1 className="text-3xl text-gray-800 mb-2">Olá, {userName}</h1>
               <p className="text-xl text-gray-600">
                 Quais dados você deseja visualizar?
               </p>
