@@ -46,6 +46,13 @@ export default function DashboardVacinacao({ onBack, onNavigate }: DashboardVaci
     fetchDashboard();
   }, []);
 
+  // Calculo das doses da vacina mais aplicada
+  const vacinaMaisAplicada = distribuicaoDoses.length > 0
+  ? distribuicaoDoses.reduce((prev, curr) =>
+      curr.totalAplicacoes > prev.totalAplicacoes ? curr : prev
+    )
+  : null;
+
   // Agrupar dados da tabela por unidade e vacinas
   const tabelaUnidades = aplicacoesUnidade.reduce((acc: Record<string, Record<string, number>>, curr) => {
     if (!acc[curr.unidade]) acc[curr.unidade] = {};
@@ -131,7 +138,7 @@ export default function DashboardVacinacao({ onBack, onNavigate }: DashboardVaci
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{resumo?.vacinaMaisAplicada ?? '...'}</div>
-                <p className="text-xs text-gray-600 mt-1">{resumo?.dosesAplicadas ?? '...'} doses aplicadas</p>
+                <p className="text-xs text-gray-600 mt-1">{vacinaMaisAplicada?.totalAplicacoes ?? '...'} doses aplicadas</p>
               </CardContent>
             </Card>
 
@@ -143,7 +150,7 @@ export default function DashboardVacinacao({ onBack, onNavigate }: DashboardVaci
               <CardContent>
                 <div className="text-2xl font-bold">{resumo?.bairroMenorCobertura ?? '...'}</div>
                 <p className="text-xs text-gray-600 mt-1">
-                  {resumo?.dosesAplicadas ? `${Math.round((resumo.pessoasVacinadas / resumo.dosesAplicadas) * 100)}% de cobertura` : '...'}
+                  {coberturaBairros.find(b => b.bairro === resumo?.bairroMenorCobertura)?.totalAplicacoes ?? '...'} doses aplicadas
                 </p>
               </CardContent>
             </Card>
@@ -153,7 +160,7 @@ export default function DashboardVacinacao({ onBack, onNavigate }: DashboardVaci
           <Card className="mb-8">
             <CardHeader>
               <CardTitle>Cobertura Vacinal por Bairro</CardTitle>
-              <CardDescription>Doses aplicadas por tipo de vacina em cada bairro</CardDescription>
+              <CardDescription>Doses aplicadas em cada bairro</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={400}>
