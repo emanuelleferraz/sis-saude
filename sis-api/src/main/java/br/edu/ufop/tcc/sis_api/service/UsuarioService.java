@@ -2,6 +2,7 @@ package br.edu.ufop.tcc.sis_api.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.edu.ufop.tcc.sis_api.exception.EmailAlreadyExistsException;
@@ -21,6 +22,7 @@ public class UsuarioService {
 
     private final UsuarioRepository repository;
     private final PerfilRepository perfilRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public UsuarioResponseDTO salvar(UsuarioRequestDTO dto) {
 
@@ -34,7 +36,7 @@ public class UsuarioService {
         UsuarioEntity usuario = UsuarioEntity.builder()
                 .nome(dto.getNome())
                 .email(dto.getEmail())
-                .senhaHash(dto.getSenha())
+                .senhaHash(passwordEncoder.encode(dto.getSenha()))
                 .perfil(perfil)
                 .build();
 

@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import br.edu.ufop.tcc.sis_api.model.entity.UsuarioEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -24,10 +25,11 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String email) {
-
+    public String generateToken(UsuarioEntity usuario) {
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(usuario.getEmail())
+                .claim("role", usuario.getPerfil().getNome())
+                .claim("nome", usuario.getNome())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -52,11 +54,11 @@ public class JwtService {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (io.jsonwebtoken.ExpiredJwtException |
-                io.jsonwebtoken.MalformedJwtException |
-                io.jsonwebtoken.security.SignatureException |
-                io.jsonwebtoken.UnsupportedJwtException |
-                IllegalArgumentException e) {
+        } catch (io.jsonwebtoken.ExpiredJwtException
+                | io.jsonwebtoken.MalformedJwtException
+                | io.jsonwebtoken.security.SignatureException
+                | io.jsonwebtoken.UnsupportedJwtException
+                | IllegalArgumentException e) {
             return false;
         }
     }
