@@ -349,7 +349,7 @@ export default function EnderecosPage({ onBack }: EnderecosPageProps) {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="rua">Rua</Label>
+                <Label htmlFor="rua">Logradouro</Label>
                 <Input
                   id="rua"
                   placeholder="Digite o nome da rua"
@@ -440,7 +440,7 @@ export default function EnderecosPage({ onBack }: EnderecosPageProps) {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="edit-rua">Rua</Label>
+                <Label htmlFor="edit-rua">Logradouro</Label>
                 <Input
                   id="edit-rua"
                   value={rua}
