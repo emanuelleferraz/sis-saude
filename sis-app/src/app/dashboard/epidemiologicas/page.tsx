@@ -29,6 +29,8 @@ export default function DashboardEpidemiologicas({ onBack }: DashboardEpidemiolo
   const [tendencia, setTendencia] = useState<TendenciaTrimestralDTO[]>([]);
   const [alertas, setAlertas] = useState<AlertaBairroDTO[]>([]);
   const [loading, setLoading] = useState(true);
+      // Filtro de Bairros
+  const [bairroFiltro, setBairroFiltro] = useState<string>('todos');
 
   const cores = ['#3b82f6', '#06b6d4', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
 
@@ -77,7 +79,11 @@ export default function DashboardEpidemiologicas({ onBack }: DashboardEpidemiolo
   }));
 
   // Monta os dados da tabela de detalhamento e alerta
-  const tabelaDetalhamento = alertas.map(a => ({
+  const tabelaDetalhamento = (
+    bairroFiltro === "todos"
+      ? alertas
+      : alertas.filter((a) => a.bairro === bairroFiltro)
+  ).map(a => ({
     doenca: a.doenca,
     bairro: a.bairro,
     casos: a.totalCasos,
@@ -93,6 +99,8 @@ export default function DashboardEpidemiologicas({ onBack }: DashboardEpidemiolo
       default: return 'text-gray-600 bg-gray-50';
     }
   };
+
+  const bairrosUnicos = Array.from(new Set(alertas.map((item) => item.bairro)));
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -333,6 +341,24 @@ export default function DashboardEpidemiologicas({ onBack }: DashboardEpidemiolo
               <CardDescription>
                 Status detalhado de casos por doença e bairro
               </CardDescription>
+              <div className="mb-4 flex flex-col sm:flex-row sm:items-center gap-3">
+                <label className="text-sm font-medium text-gray-700">
+                  Filtrar por bairro:
+                </label>
+
+                <select
+                  value={bairroFiltro}
+                  onChange={(e) => setBairroFiltro(e.target.value)}
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="todos">Todos</option>
+                  {bairrosUnicos.map((bairro) => (
+                    <option key={bairro} value={bairro}>
+                      {bairro}
+                    </option>
+                  ))}
+                </select>
+            </div>
             </CardHeader>
             <CardContent className="overflow-auto max-h-96">
               <Table className="min-w-150">

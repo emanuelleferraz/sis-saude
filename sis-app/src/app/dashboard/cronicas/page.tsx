@@ -69,6 +69,8 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [dados, setDados] = useState<DashboardCronicaDTO | null>(null);
+    // Filtro de Bairros
+  const [bairroFiltro, setBairroFiltro] = useState<string>('todos');
 
   useEffect(() => {
     async function carregar() {
@@ -92,6 +94,7 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
     tendenciaTrimestral,
     alertas,
   } = dados;
+  
 
   // Normalizador para chave dinâmica do gráfico
   const normalizar = (texto: string) =>
@@ -158,6 +161,13 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
         ? Number(((item.totalCasos / totalDistribuicao) * 100).toFixed(1))
         : 0,
   }));
+
+  const bairrosUnicos = Array.from(new Set(alertas.map((item) => item.bairro)));
+  const alertasFiltrados =
+    bairroFiltro === "todos"
+      ? alertas
+      : alertas.filter((item) => item.bairro === bairroFiltro);
+
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -361,6 +371,24 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
               <CardDescription>
                 Status detalhado de casos por doença e bairro
               </CardDescription>
+              <div className="mb-4 flex flex-col sm:flex-row sm:items-center gap-3">
+                <label className="text-sm font-medium text-gray-700">
+                  Filtrar por bairro:
+                </label>
+
+                <select
+                  value={bairroFiltro}
+                  onChange={(e) => setBairroFiltro(e.target.value)}
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="todos">Todos</option>
+                  {bairrosUnicos.map((bairro) => (
+                    <option key={bairro} value={bairro}>
+                      {bairro}
+                    </option>
+                  ))}
+                </select>
+            </div>
             </CardHeader>
             <CardContent>
               <div className="max-h-100 overflow-y-auto overflow-x-auto">
@@ -374,7 +402,7 @@ export default function DashboardCronicas({ onBack }: DashboardCronicasProps) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {alertas.map((item, index) => (
+                    {alertasFiltrados.map((item, index) => (
                       <TableRow key={index}>
                         <TableCell className="font-medium">
                           {item.doenca}
