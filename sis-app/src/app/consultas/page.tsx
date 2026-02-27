@@ -319,7 +319,7 @@ export default function ConsultasPage({ onBack }: ConsultasPageProps) {
             </div>
 
             {/* Tabela de consultas */}
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-125 overflow-y-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
